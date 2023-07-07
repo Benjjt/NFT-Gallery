@@ -1,7 +1,7 @@
 import React from "react";
 
-const ResultNumber = () => {
-  return <div>ResultNumber</div>;
+const ResultNumber = ({ number }: { number: number }) => {
+  return <div className="hidden lg:flex">{number}</div>;
 };
 
 export default ResultNumber;

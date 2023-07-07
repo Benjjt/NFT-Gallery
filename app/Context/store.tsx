@@ -11,18 +11,30 @@ import {
 interface ContextProps {
   isFilterOpen: boolean;
   setIsFilterOpen: Dispatch<SetStateAction<boolean>>;
+  currentDisplay: string;
+  setCurrentDisplay: Dispatch<SetStateAction<string>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
   isFilterOpen: false,
   setIsFilterOpen: (): boolean => false,
+  currentDisplay: "default",
+  setCurrentDisplay: (): string => "default",
 });
 
 export const FilterButtonContext = ({ children }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [currentDisplay, setCurrentDisplay] = useState("default");
 
   return (
-    <GlobalContext.Provider value={{ isFilterOpen, setIsFilterOpen }}>
+    <GlobalContext.Provider
+      value={{
+        isFilterOpen,
+        setIsFilterOpen,
+        currentDisplay,
+        setCurrentDisplay,
+      }}
+    >
       {children}
     </GlobalContext.Provider>
   );

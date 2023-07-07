@@ -1,20 +1,26 @@
+"use client";
 import React, { useEffect } from "react";
-import NFTset1 from "../../../../files/NFTset1.json";
+import { APIReturn, NFT } from "@/app/types";
+import DefaultView from "./DefaultView";
+import LargeView from "./LargeView";
+import ListView from "./ListView";
+import { useFilterButtonContext } from "@/app/Context/store";
 
-const NFTRender = () => {
-  useEffect(() => {
-    console.log("here's the JSON", NFTset1);
-  }, [NFTset1]);
-
+const NFTRender = ({
+  initialData,
+  fetchedData,
+}: {
+  initialData: APIReturn;
+  fetchedData: APIReturn;
+}) => {
+  const { currentDisplay, setCurrentDisplay } = useFilterButtonContext();
   return (
-    <div className="m-4 flex justify-center  items-start overflow-hidden flex-wrap transition-all">
-      {NFTset1.map((item, index) => {
-        return (
-          <div className="w-[8rem] h-[8rem] bg-dark/20 text-dark rounded-lg  m-2 overflow-hidden ">
-            {JSON.stringify(item)}
-          </div>
-        );
-      })}
+    <div className="w-full h-full ">
+      {currentDisplay === "default" && (
+        <DefaultView initialData={initialData} fetchedData={fetchedData} />
+      )}
+      {currentDisplay === "large" && <LargeView initialData={initialData} />}
+      {currentDisplay === "list" && <ListView initialData={initialData} />}
     </div>
   );
 };

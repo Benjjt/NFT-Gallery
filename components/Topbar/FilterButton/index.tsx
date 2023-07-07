@@ -18,7 +18,7 @@ const FilterButton = () => {
       className=" h-full m-2 py-2 px-4 border rounded-lg flex justify-start items-center gap-2 max-w-[750px]  hover:cursor-pointer  hover:shadow-lg transition-all"
     >
       <FaFilter />
-      Filter
+      <div className="hidden lg:flex">Filter</div>
     </button>
   );
 };
