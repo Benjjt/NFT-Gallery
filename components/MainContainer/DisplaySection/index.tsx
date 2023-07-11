@@ -18,7 +18,7 @@ const DisplaySection = ({
 }) => {
   return (
     <div className="w-full h-full overflow-y-scroll flex flex-col justify-start items-start   ">
-      <div className="flex justify-start items-center gap-2 flex-wrap p-4 ">
+      {/* <div className="flex justify-start items-center gap-2 flex-wrap p-4 ">
         {Object.keys(filterObj).map((key, index) => {
           return (
             <div
@@ -38,7 +38,7 @@ const DisplaySection = ({
             </div>
           );
         })}
-      </div>
+      </div> */}
       <NFTRender initialData={initialData} fetchedData={fetchedData} />
     </div>
   );

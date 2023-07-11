@@ -6,6 +6,7 @@ import { NFT, APIReturn } from "@/app/types";
 import { FiChevronDown } from "react-icons/fi";
 import { BsFillCheckSquareFill } from "react-icons/bs";
 import { IoIosCloseCircle } from "react-icons/io";
+import { CgCloseR } from "react-icons/cg";
 
 const FilterSection = ({
   initialData,
@@ -14,13 +15,14 @@ const FilterSection = ({
   setFilterObj,
 }: {
   initialData: APIReturn;
-  fetchedData: APIReturn;
+  fetchedData: APIReturn | null;
   filterObj: object;
   setFilterObj: Function;
 }) => {
   const { isFilterOpen, setIsFilterOpen, currentDisplay } =
     useFilterButtonContext();
-  const [filters, setFilters] = useState({});
+  const [displayedFilters, setDisplayedFilters] = useState({});
+  const [filtersRemaining, setFiltersRemaining] = useState<object>({});
   const [IDOfOpen, setIDOfOpen] = useState("");
   const filtersAnimation = useTransition(isFilterOpen, {
     from: { opacity: 0, maxWidth: 0, zIndex: 999999 },
@@ -30,19 +32,21 @@ const FilterSection = ({
   });
 
   useEffect(() => {
-    if (fetchedData?.remaining_counts) {
-      console.log("setting state to NEW values");
-      setFilters(fetchedData.remaining_counts);
-    } else {
-      console.log("setting state to initial values");
-      setFilters(initialData?.remaining_counts);
-    }
+    !fetchedData && setDisplayedFilters(initialData.remaining_counts);
+  }, [initialData]);
+
+  useEffect(() => {
+    fetchedData && setFiltersRemaining(fetchedData.remaining_counts);
   }, [fetchedData]);
 
-  useEffect(() => {}, []);
-
   const handleFilterAction = (selection: string) => {
-    setFilterObj({ ...filterObj, [IDOfOpen]: selection });
+    if (IDOfOpen in filterObj && filterObj[IDOfOpen] === selection) {
+      let newObj = filterObj;
+      delete newObj[IDOfOpen];
+      setFilterObj(newObj);
+    } else {
+      setFilterObj({ ...filterObj, [IDOfOpen]: selection });
+    }
   };
 
   return filtersAnimation(
@@ -56,7 +60,7 @@ const FilterSection = ({
             <h2 className="text-xl w-full bg-light font-bold">TRAITS</h2>
 
             <ul className="flex flex-col justify-start items-start gap-2  w-full h-full ">
-              {Object.keys(filters).map((item, index) => {
+              {Object.keys(displayedFilters).map((item, index) => {
                 return (
                   <div
                     key={index}
@@ -75,9 +79,6 @@ const FilterSection = ({
                     >
                       <li>{item.replaceAll("_", " ")}</li>
                       <div className="flex justify-center items-center gap-4 ">
-                        {/* <span className="text-dark/50">
-                          {Object.keys(filters[item]).length}
-                        </span> */}
                         <FiChevronDown
                           className={`w-6 h-6 transition-all ${
                             IDOfOpen === item && "rotate-180"
@@ -88,35 +89,42 @@ const FilterSection = ({
 
                     {IDOfOpen === item && (
                       <ul className="flex flex-col gap-4  justify-start items-start w-full mt-4 z-40  ">
-                        {Object.keys(filters[item]).map((item, index) => {
-                          return (
-                            <li
-                              key={item}
-                              onClick={() => {
-                                //*ADD FILTER TYPE AND FILTER TO ARRAY OF FILTER PARAMS
-                                handleFilterAction(item);
-                              }}
-                              className="w-full py-2 px-4  font-[600] text-sm rounded-md hover:cursor-pointer hover:bg-dark/5 flex justify-between gap-4 items-center group"
-                            >
-                              <span>{item.replaceAll("_", " ")}</span>
-                              <span className="text-dark/80 ml-auto">
-                                {filters[IDOfOpen][item]}
-                              </span>
-                              {filterObj && filterObj[IDOfOpen] === item ? (
-                                <BsFillCheckSquareFill className="fill-accentTwo  w-6 h-6 rounded-lg" />
-                              ) : (
-                                <div
-                                  className={`w-6 h-6  rounded-lg 
-                                  border border-dark/20 group-hover:border-none  flex justify-center items-center "
+                        {Object.keys(displayedFilters[item]).map(
+                          (item, index) => {
+                            return (
+                              <li
+                                key={item}
+                                onClick={() => {
+                                  //*ADD FILTER TYPE AND FILTER TO ARRAY OF FILTER PARAMS
+                                  handleFilterAction(item);
+                                }}
+                                className={`w-full py-2 px-4  font-[600] text-sm rounded-md  flex justify-between gap-4 items-center group`}
+                              >
+                                <span>{item.replaceAll("_", " ")}</span>
+                                <span className="text-dark/80 ml-auto">
+                                  {Object.keys(filtersRemaining).length > 0
+                                    ? IDOfOpen in filtersRemaining
+                                      ? filtersRemaining[IDOfOpen][item]
+                                      : ""
+                                    : displayedFilters[IDOfOpen][item]}
+                                </span>
+
+                                {filterObj && filterObj[IDOfOpen] === item ? (
+                                  <BsFillCheckSquareFill className="fill-accentTwo  w-6 h-6 rounded-lg" />
+                                ) : (
+                                  <div
+                                    className={`w-6 h-6  rounded-lg 
+                                  flex justify-center items-center border
                                 
                                 `}
-                                >
-                                  <BsFillCheckSquareFill className="group-hover:fill-accentTwo/50 hidden group-hover:flex w-6 h-6 rounded-lg" />
-                                </div>
-                              )}
-                            </li>
-                          );
-                        })}
+                                  >
+                                    <BsFillCheckSquareFill className="group-hover:fill-accentTwo/50 hidden group-hover:flex w-6 h-6 rounded-lg" />
+                                  </div>
+                                )}
+                              </li>
+                            );
+                          }
+                        )}
                       </ul>
                     )}
                   </div>

@@ -27,12 +27,12 @@ const DefaultView = ({
   }, [fetchedData]);
 
   return (
-    <div className=" flex justify-start  items-center flex-wrap gap-4 p-4 w-fit  ">
+    <div className=" flex justify-between  items-center flex-wrap  p-4 w-fit  ">
       {NFTS?.map((item, index) => {
         return (
           <div
-            className={`flex relative  justify-center items-center w-[8rem] h-[8rem]  text-light rounded-xl font-bold bg-dark/80 hover:cursor-pointer ${
-              index === NFTS.length - 1 && ""
+            className={`flex relative  justify-center items-center m-[1%] w-[8rem] h-[8rem]  text-light rounded-xl font-bold bg-dark/80 hover:cursor-pointer ${
+              index === NFTS.length - 1 && "mr-auto"
             }`}
             key={index}
           >
