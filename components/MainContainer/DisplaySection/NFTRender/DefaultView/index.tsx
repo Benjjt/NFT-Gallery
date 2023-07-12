@@ -2,13 +2,16 @@
 import { NFT, APIReturn } from "@/app/types";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import PageNavigation from "../PageNavigation";
 
 const DefaultView = ({
   initialData,
   fetchedData,
+  setSelectedNFT,
 }: {
   initialData: APIReturn;
   fetchedData: APIReturn;
+  setSelectedNFT: Function;
 }) => {
   const [NFTS, setNFTS] = useState<NFT[]>([]);
 
@@ -27,14 +30,17 @@ const DefaultView = ({
   }, [fetchedData]);
 
   return (
-    <div className=" flex justify-between  items-center flex-wrap  p-4 w-fit  ">
+    <div className=" flex justify-start relative  items-center flex-wrap  p-4  pb-[4rem]  ">
       {NFTS?.map((item, index) => {
         return (
           <div
-            className={`flex relative  justify-center items-center m-[1%] w-[8rem] h-[8rem]  text-light rounded-xl font-bold bg-dark/80 hover:cursor-pointer ${
-              index === NFTS.length - 1 && "mr-auto"
+            className={`flex relative transition-all flex-initial   justify-center items-center  m-[1%] w-[8rem] h-[8rem]  text-light rounded-xl font-bold hover:scale-105 bg-dark/80 hover:cursor-pointer ${
+              index === NFTS.length - 1 && ""
             }`}
-            key={index}
+            key={item.pfp_file_name}
+            onClick={() => {
+              setSelectedNFT(item);
+            }}
           >
             {/* {item.pfp_file_name} */}
             <Image

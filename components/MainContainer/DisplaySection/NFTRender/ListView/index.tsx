@@ -3,20 +3,35 @@ import React, { useState, useEffect } from "react";
 import { APIReturn, NFT } from "@/app/types";
 import Image from "next/image";
 
-const ListView = ({ initialData }: { initialData: APIReturn }) => {
+const ListView = ({
+  initialData,
+  setSelectedNFT,
+  fetchedData,
+}: {
+  initialData: APIReturn;
+  setSelectedNFT: Function;
+  fetchedData: APIReturn;
+}) => {
   const [NFTS, setNFTS] = useState<NFT[]>([]);
 
   useEffect(() => {
-    setNFTS(initialData?.records);
-  }, [initialData]);
+    if (fetchedData?.records) {
+      console.log("setting state to NEW values");
+      setNFTS(fetchedData.records);
+    } else {
+      console.log("setting state to initial values");
+      setNFTS(initialData?.records);
+    }
+  }, [fetchedData]);
 
   return (
     <div className="flex flex-col w-full gap-2 p-4">
       {NFTS?.map((item, index) => {
         return (
           <div
-            className="flex justify-start gap-4 p-6   items-center w-full h-[4rem]  rounded-xl font-bold text-dark border hover:cursor-pointer"
-            key={index}
+            className="flex justify-start gap-8 p-6  hover:border-accentTwo transition-all items-center w-full h-[4rem]  rounded-xl font-bold text-dark border hover:cursor-pointer"
+            key={item.json_id}
+            onClick={() => setSelectedNFT(item)}
           >
             <div className="h-[3rem] w-[3rem] relative">
               <Image
@@ -29,7 +44,8 @@ const ListView = ({ initialData }: { initialData: APIReturn }) => {
                 src={`https://canverse-io.imgix.net/pawnhub/pfprenders_jpg/${item.pfp_file_name}`}
               />
             </div>
-            {item.piece_name}
+            <span> {item.piece_name}</span>
+            <span> {item.json_id}</span>
           </div>
         );
       })}

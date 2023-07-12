@@ -2,6 +2,7 @@ import Topbar from "@/components/Topbar";
 import MainContainer from "@/components/MainContainer";
 import { NFT, APIReturn } from "./types";
 import { NextFetchEvent } from "next/server";
+import { init } from "next/dist/compiled/@vercel/og/satori";
 
 //SERVER SIDE COMPONENT THAT GET'S ALL NFT's FOR FIRST LOAD
 
@@ -15,9 +16,7 @@ async function getNFTs() {
     method: "GET",
     cache: "no-store",
   });
-  // The return value is *not* serialized
-  // You can return Date, Map, Set, etc.
-  // Recommendation: handle errors
+
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
     console.log(res);
@@ -28,14 +27,14 @@ async function getNFTs() {
 
   let data = await res.json();
 
-  // console.log("HERES THE RESULT:", await res.json());
   return data;
 }
 
 export default async function Home() {
   //CALL API HERE
   const initialData: APIReturn = await getNFTs();
-  console.log(initialData.remaining_counts);
+
+  console.log(initialData);
 
   return (
     <main className="flex h-screen  flex-col justify-start items-center m-8 gap-8 max-w-[2000px]  ">

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useSpring, animated, useTransition } from "@react-spring/web";
 import { useFilterButtonContext } from "@/app/Context/store";
-import { NFT, APIReturn } from "@/app/types";
+import { NFT, APIReturn, RemainingCounts } from "@/app/types";
 import { FiChevronDown } from "react-icons/fi";
 import { BsFillCheckSquareFill } from "react-icons/bs";
 import { IoIosCloseCircle } from "react-icons/io";
@@ -16,20 +16,24 @@ const FilterSection = ({
 }: {
   initialData: APIReturn;
   fetchedData: APIReturn | null;
-  filterObj: object;
+  filterObj: RemainingCounts;
   setFilterObj: Function;
 }) => {
   const { isFilterOpen, setIsFilterOpen, currentDisplay } =
     useFilterButtonContext();
-  const [displayedFilters, setDisplayedFilters] = useState({});
+  const [displayedFilters, setDisplayedFilters] = useState<RemainingCounts>({});
   const [filtersRemaining, setFiltersRemaining] = useState<object>({});
-  const [IDOfOpen, setIDOfOpen] = useState("");
+  const [IDOfOpen, setIDOfOpen] = useState<string>("");
   const filtersAnimation = useTransition(isFilterOpen, {
     from: { opacity: 0, maxWidth: 0, zIndex: 999999 },
     enter: { opacity: 1, maxWidth: 400, zIndex: 999999 },
     leave: { opacity: 0, maxWidth: 0, zIndex: 999999 },
     // delay: isFilterOpen ? 0 : 400,
   });
+
+  useEffect(() => {
+    console.log("Internal Useeffect triggered:", filterObj);
+  }, [filterObj]);
 
   useEffect(() => {
     !fetchedData && setDisplayedFilters(initialData.remaining_counts);
@@ -41,8 +45,10 @@ const FilterSection = ({
 
   const handleFilterAction = (selection: string) => {
     if (IDOfOpen in filterObj && filterObj[IDOfOpen] === selection) {
-      let newObj = filterObj;
-      delete newObj[IDOfOpen];
+      console.log("item to be deleted");
+      let newObj = { ...filterObj };
+      delete newObj[IDOfOpen as keyof typeof filterObj];
+      console.log("Updating state with deletion");
       setFilterObj(newObj);
     } else {
       setFilterObj({ ...filterObj, [IDOfOpen]: selection });
@@ -109,7 +115,7 @@ const FilterSection = ({
                                     : displayedFilters[IDOfOpen][item]}
                                 </span>
 
-                                {filterObj && filterObj[IDOfOpen] === item ? (
+                                {filterObj[IDOfOpen] === item ? (
                                   <BsFillCheckSquareFill className="fill-accentTwo  w-6 h-6 rounded-lg" />
                                 ) : (
                                   <div

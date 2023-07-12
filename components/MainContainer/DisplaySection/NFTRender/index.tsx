@@ -5,22 +5,48 @@ import DefaultView from "./DefaultView";
 import LargeView from "./LargeView";
 import ListView from "./ListView";
 import { useFilterButtonContext } from "@/app/Context/store";
+import PageNavigation from "./PageNavigation";
 
 const NFTRender = ({
   initialData,
   fetchedData,
+  setRequestedPage,
+  setSelectedNFT,
 }: {
   initialData: APIReturn;
   fetchedData: APIReturn;
+  setRequestedPage: Function;
+  setSelectedNFT: Function;
 }) => {
   const { currentDisplay, setCurrentDisplay } = useFilterButtonContext();
   return (
-    <div className="w-full h-full ">
+    <div className="w-full h-full relative ">
       {currentDisplay === "default" && (
-        <DefaultView initialData={initialData} fetchedData={fetchedData} />
+        <DefaultView
+          setSelectedNFT={setSelectedNFT}
+          initialData={initialData}
+          fetchedData={fetchedData}
+        />
       )}
-      {currentDisplay === "large" && <LargeView initialData={initialData} />}
-      {currentDisplay === "list" && <ListView initialData={initialData} />}
+      {currentDisplay === "large" && (
+        <LargeView
+          setSelectedNFT={setSelectedNFT}
+          initialData={initialData}
+          fetchedData={fetchedData}
+        />
+      )}
+      {currentDisplay === "list" && (
+        <ListView
+          setSelectedNFT={setSelectedNFT}
+          initialData={initialData}
+          fetchedData={fetchedData}
+        />
+      )}
+      <PageNavigation
+        setRequestedPage={setRequestedPage}
+        initialData={initialData}
+        fetchedData={fetchedData}
+      />
     </div>
   );
 };
