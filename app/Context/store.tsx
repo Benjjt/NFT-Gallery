@@ -22,7 +22,7 @@ const GlobalContext = createContext<ContextProps>({
   setCurrentDisplay: (): string => "default",
 });
 
-export const FilterButtonContext = ({ children }) => {
+export const FilterButtonContext = ({ children }: { children: any }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [currentDisplay, setCurrentDisplay] = useState("default");
 

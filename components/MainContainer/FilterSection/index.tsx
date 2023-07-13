@@ -19,10 +19,10 @@ const FilterSection = ({
   filterObj: RemainingCounts;
   setFilterObj: Function;
 }) => {
-  const { isFilterOpen, setIsFilterOpen, currentDisplay } =
-    useFilterButtonContext();
+  const { isFilterOpen } = useFilterButtonContext();
   const [displayedFilters, setDisplayedFilters] = useState<RemainingCounts>({});
-  const [filtersRemaining, setFiltersRemaining] = useState<object>({});
+  const [filtersRemaining, setFiltersRemaining] =
+    useState<RemainingCounts | null>(null);
   const [IDOfOpen, setIDOfOpen] = useState<string>("");
   const filtersAnimation = useTransition(isFilterOpen, {
     from: { opacity: 0, maxWidth: 0, zIndex: 999999 },
@@ -32,16 +32,19 @@ const FilterSection = ({
   });
 
   useEffect(() => {
-    console.log("Internal Useeffect triggered:", filterObj);
-  }, [filterObj]);
-
-  useEffect(() => {
     !fetchedData && setDisplayedFilters(initialData.remaining_counts);
   }, [initialData]);
 
   useEffect(() => {
-    fetchedData && setFiltersRemaining(fetchedData.remaining_counts);
-  }, [fetchedData]);
+    if (fetchedData) {
+      const remainingFilters: RemainingCounts = fetchedData.remaining_counts;
+      setFiltersRemaining(remainingFilters);
+    } else {
+      const initialFilters: RemainingCounts = initialData.remaining_counts;
+
+      setDisplayedFilters(initialFilters);
+    }
+  }, [fetchedData, initialData]);
 
   const handleFilterAction = (selection: string) => {
     if (IDOfOpen in filterObj && filterObj[IDOfOpen] === selection) {
@@ -108,7 +111,7 @@ const FilterSection = ({
                               >
                                 <span>{item.replaceAll("_", " ")}</span>
                                 <span className="text-dark/80 ml-auto">
-                                  {Object.keys(filtersRemaining).length > 0
+                                  {filtersRemaining
                                     ? IDOfOpen in filtersRemaining
                                       ? filtersRemaining[IDOfOpen][item]
                                       : ""

@@ -28,31 +28,71 @@ export type NFT = {
   json_id?: number;
 };
 
-export type RemainingCounts = {
-  accent_material_item?: object;
-  accent_material_on?: object;
-  accent_material_rarity?: object;
-  alt_material_item?: object;
-  alt_material_on?: object;
-  alt_material_rarity?: object;
-  base_item?: object;
-  base_rarity?: object;
-  board?: object;
-  body_item?: object;
-  body_rarity?: object;
-  environment?: object;
-  felt_item?: object;
-  felt_rarity?: object;
-  head_item?: object;
-  head_rarity?: object;
-  main_material_item?: object;
-  main_material_rarity?: object;
-  pfp_file_name?: object;
-  piece_color?: object;
-  piece_name?: object;
-  piece_type?: object;
-  rarity_score?: object;
-};
+export interface RemainingCounts {
+  accent_material_item?: {
+    [key: string]: number;
+  };
+  accent_material_on?: {
+    [key: string]: number;
+  };
+  accent_material_rarity?: {
+    [key: string]: number;
+  };
+  alt_material_item?: {
+    [key: string]: number;
+  };
+  alt_material_on?: {
+    [key: string]: number;
+  };
+  alt_material_rarity?: {
+    [key: string]: number;
+  };
+  base_item?: {
+    [key: string]: number;
+  };
+  base_rarity?: {
+    [key: string]: number;
+  };
+  board?: {
+    [key: string]: number;
+  };
+  body_item?: {
+    [key: string]: number;
+  };
+  body_rarity?: {
+    [key: string]: number;
+  };
+  environment?: {
+    [key: string]: number;
+  };
+  felt_item?: {
+    [key: string]: number;
+  };
+  felt_rarity?: {
+    [key: string]: number;
+  };
+  head_item?: {
+    [key: string]: number;
+  };
+  head_rarity?: {
+    [key: string]: number;
+  };
+  main_material_item?: {
+    [key: string]: number;
+  };
+  main_material_rarity?: {
+    [key: string]: number;
+  };
+  piece_color?: {
+    [key: string]: number;
+  };
+  piece_type?: {
+    [key: string]: number;
+  };
+  rarity_score?: {
+    [key: string]: number;
+  };
+}
 
 export type APIReturn = {
   total_records: number;

@@ -8,10 +8,12 @@ const DefaultView = ({
   initialData,
   fetchedData,
   setSelectedNFT,
+  selectedNFT,
 }: {
   initialData: APIReturn;
   fetchedData: APIReturn;
   setSelectedNFT: Function;
+  selectedNFT: NFT;
 }) => {
   const [NFTS, setNFTS] = useState<NFT[]>([]);
 
@@ -37,12 +39,11 @@ const DefaultView = ({
             className={`flex relative transition-all flex-initial   justify-center items-center  m-[1%] w-[8rem] h-[8rem]  text-light rounded-xl font-bold hover:scale-105 bg-dark/80 hover:cursor-pointer ${
               index === NFTS.length - 1 && ""
             }`}
-            key={item.pfp_file_name}
+            key={item.json_id}
             onClick={() => {
-              setSelectedNFT(item);
+              setSelectedNFT({ ...item });
             }}
           >
-            {/* {item.pfp_file_name} */}
             <Image
               fill={true}
               style={{ objectFit: "contain" }}

@@ -19,13 +19,20 @@ const DisplaySection = ({
   setFilterObj: Function;
   setRequestedPage: Function;
 }) => {
-  const [selectedNFT, setSelectedNFT] = useState<NFT>({});
+  const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null);
+  const [copyClicked, setCopyClicked] = useState<boolean>(false);
+  const [intCopied, setIntCopied] = useState<boolean>(false);
 
   const deleteSelection = (key: string) => {
     const newObj = { ...filterObj };
     delete newObj[key as keyof typeof filterObj];
     setFilterObj(newObj);
   };
+
+  useEffect(() => {
+    setCopyClicked(false);
+    setIntCopied(false);
+  }, [selectedNFT]);
 
   return (
     <div className="w-full h-full overflow-y-scroll flex flex-col justify-start items-start   ">
@@ -61,8 +68,15 @@ const DisplaySection = ({
         fetchedData={fetchedData}
         setSelectedNFT={setSelectedNFT}
       />
-      {Object.keys(selectedNFT).length > 0 && (
-        <NFTDetails nft={selectedNFT} setSelectedNFT={setSelectedNFT} />
+      {selectedNFT && (
+        <NFTDetails
+          copyClicked={copyClicked}
+          setCopyClicked={setCopyClicked}
+          selectedNFT={selectedNFT}
+          setSelectedNFT={setSelectedNFT}
+          intCopied={intCopied}
+          setIntCopied={setIntCopied}
+        />
       )}
     </div>
   );

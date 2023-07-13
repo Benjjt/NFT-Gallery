@@ -106,13 +106,18 @@ const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
 
   useEffect(() => {
     console.log("API useeffect triggered");
+
     if (Object.keys(filterObj).length > 0) {
       console.log("No filters within filter object");
       let newObj = filterObjects(filterObj, keyInterpretations);
       let url = new URLSearchParams(newObj).toString();
       if (previousRequest != filterObj) {
         console.log("new request as object is now different");
-        fetchWithFilters(url, 1);
+        //!TEMP FIX FOR RARITY SCORE BUG
+        if (url.includes("rS=17")) {
+          const replacement = url.replace("rS=17", "rS=18");
+          fetchWithFilters(replacement, 1);
+        } else fetchWithFilters(url, 1);
       } else {
         console.log("Same attribute filters requested. Requesting new page!");
         fetchWithFilters(url, requestedPage);

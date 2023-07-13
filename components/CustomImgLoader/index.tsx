@@ -2,13 +2,22 @@
 import React from "react";
 import Image from "next/image";
 
-const imageLoader = ({ src, width, quality }) => {
+const imageLoader = ({
+  src,
+  width,
+  quality,
+}: {
+  src: string;
+  width: string;
+  quality: number;
+}) => {
   return `${src}?w=${width}&q=${quality || 75}`;
 };
 
 const CustomImgLoader = () => {
   return (
-    <Image loader={imageLoader} src="me.png" alt="canVERSE NFTs" fill={true} />
+    // <Image loader={imageLoader} src="me.png" alt="canVERSE NFTs" fill={true} />
+    ""
   );
 };
 
