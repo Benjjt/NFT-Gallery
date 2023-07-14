@@ -12,7 +12,7 @@ const NFTRender = ({
   fetchedData,
   setSelectedNFT,
 }: {
-  initialData: APIReturn;
+  initialData: APIReturn | null;
   fetchedData: APIReturn | null;
   setSelectedNFT: Function;
 }) => {

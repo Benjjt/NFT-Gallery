@@ -14,7 +14,7 @@ const FilterSection = ({
   filterObj,
   setFilterObj,
 }: {
-  initialData: APIReturn;
+  initialData: APIReturn | null;
   fetchedData: APIReturn | null;
   filterObj: RemainingCounts | null;
   setFilterObj: Function;
@@ -33,9 +33,11 @@ const FilterSection = ({
 
   useEffect(() => {
     if (fetchedData) {
+      console.log("setting remaining counts");
+      console.log(fetchedData.remaining_counts);
       const remainingFilters: RemainingCounts = fetchedData.remaining_counts;
       setFiltersRemaining(remainingFilters);
-    } else {
+    } else if (initialData) {
       const initialFilters: RemainingCounts = initialData.remaining_counts;
 
       setDisplayedFilters(initialFilters);

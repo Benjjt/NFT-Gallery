@@ -12,7 +12,7 @@ const DisplaySection = ({
   filterObj,
   setFilterObj,
 }: {
-  initialData: APIReturn;
+  initialData: APIReturn | null;
   fetchedData: APIReturn | null;
   filterObj: RemainingCounts | null;
   setFilterObj: Function;

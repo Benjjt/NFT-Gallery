@@ -10,7 +10,7 @@ const DefaultView = ({
   setSelectedNFT,
   selectedNFT,
 }: {
-  initialData: APIReturn;
+  initialData: APIReturn | null;
   fetchedData: APIReturn | null;
   setSelectedNFT: Function;
   selectedNFT: NFT;
@@ -21,9 +21,9 @@ const DefaultView = ({
     if (fetchedData?.records) {
       console.log("setting state to NEW values");
       setNFTS(fetchedData.records);
-    } else {
+    } else if (initialData?.records) {
       console.log("setting state to initial values");
-      setNFTS(initialData?.records);
+      setNFTS(initialData.records);
     }
   }, [fetchedData]);
 
@@ -49,8 +49,6 @@ const DefaultView = ({
               style={{ objectFit: "contain" }}
               className="rounded-xl"
               alt={item.piece_name}
-              // placeholder="blur"
-              // blurDataURL=""
               src={`https://canverse-io.imgix.net/pawnhub/pfprenders_jpg/${item.pfp_file_name}`}
             />
           </div>

@@ -9,17 +9,17 @@ const PageNavigation = ({
   initialData,
   fetchedData,
 }: {
-  initialData: APIReturn;
-  fetchedData: APIReturn;
+  initialData: APIReturn | null;
+  fetchedData: APIReturn | null;
 }) => {
   const [totalPages, setTotalPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(0);
 
   useEffect(() => {
-    if (!fetchedData) {
+    if (!fetchedData && initialData) {
       setTotalPages(initialData.total_pages);
       setCurrentPage(initialData.page);
-    } else {
+    } else if (fetchedData) {
       setTotalPages(fetchedData.total_pages);
       setCurrentPage(fetchedData.page);
     }
