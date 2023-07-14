@@ -11,13 +11,11 @@ const DisplaySection = ({
   fetchedData,
   filterObj,
   setFilterObj,
-  setRequestedPage,
 }: {
   initialData: APIReturn;
-  fetchedData: APIReturn;
-  filterObj: object;
+  fetchedData: APIReturn | null;
+  filterObj: RemainingCounts | null;
   setFilterObj: Function;
-  setRequestedPage: Function;
 }) => {
   const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null);
   const [copyClicked, setCopyClicked] = useState<boolean>(false);
@@ -37,33 +35,30 @@ const DisplaySection = ({
   return (
     <div className="w-full h-full overflow-y-scroll flex flex-col justify-start items-start   ">
       <div className="flex justify-start items-center gap-2 flex-wrap p-4 ">
-        {Object.keys(filterObj).map((key, index) => {
-          return (
-            <div
-              key={index}
-              className="p-2 gap-2 border rounded-lg flex justify-start items-center"
-            >
-              <span>
-                {key.replaceAll("_", " ")}:{" "}
-                <span className="text-sm font-[700]">
-                  {filterObj[key as keyof typeof filterObj].replaceAll(
-                    "_",
-                    " "
-                  )}
+        {filterObj &&
+          Object.keys(filterObj).map((key, index) => {
+            return (
+              <div
+                key={index}
+                className="p-2 gap-2 border rounded-lg flex justify-start items-center"
+              >
+                <span>
+                  {key.replaceAll("_", " ")}:{" "}
+                  <span className="text-sm font-[700]">
+                    {(filterObj as any)[key].replaceAll("_", " ")}
+                  </span>
                 </span>
-              </span>
-              <IoIosCloseCircle
-                onClick={() => {
-                  deleteSelection(key);
-                }}
-                className="w-6 h-6 hover:cursor-pointer hover:fill-accentTwo transition-all"
-              />
-            </div>
-          );
-        })}
+                <IoIosCloseCircle
+                  onClick={() => {
+                    deleteSelection(key);
+                  }}
+                  className="w-6 h-6 hover:cursor-pointer hover:fill-accentTwo transition-all"
+                />
+              </div>
+            );
+          })}
       </div>
       <NFTRender
-        setRequestedPage={setRequestedPage}
         initialData={initialData}
         fetchedData={fetchedData}
         setSelectedNFT={setSelectedNFT}

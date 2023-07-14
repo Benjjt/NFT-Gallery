@@ -10,12 +10,10 @@ import PageNavigation from "./PageNavigation";
 const NFTRender = ({
   initialData,
   fetchedData,
-  setRequestedPage,
   setSelectedNFT,
 }: {
   initialData: APIReturn;
-  fetchedData: APIReturn;
-  setRequestedPage: Function;
+  fetchedData: APIReturn | null;
   setSelectedNFT: Function;
 }) => {
   const { currentDisplay, setCurrentDisplay } = useFilterButtonContext();
@@ -42,11 +40,7 @@ const NFTRender = ({
           fetchedData={fetchedData}
         />
       )}
-      <PageNavigation
-        setRequestedPage={setRequestedPage}
-        initialData={initialData}
-        fetchedData={fetchedData}
-      />
+      <PageNavigation initialData={initialData} fetchedData={fetchedData} />
     </div>
   );
 };

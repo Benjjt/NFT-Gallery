@@ -2,13 +2,14 @@
 import React, { useEffect, useState } from "react";
 import FilterSection from "./FilterSection";
 import DisplaySection from "./DisplaySection";
-import { NFT, APIReturn, RemainingCounts } from "@/app/types";
+import { NFT, APIReturn, RemainingCounts, KEYS } from "@/app/types";
+import { useSearchParams, useRouter } from "next/navigation";
 
-const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
-  const [filterObj, setFilterObj] = useState<RemainingCounts>({});
-  const [fetchedData, setFetchedData] = useState<APIReturn>();
-  const [requestedPage, setRequestedPage] = useState<number>(1);
-  const [previousRequest, setPreviousRequest] = useState<object>({});
+const MainContainer = ({ initialData }: { initialData: APIReturn | null }) => {
+  const [filterObj, setFilterObj] = useState<RemainingCounts | null>(null);
+  const [fetchedData, setFetchedData] = useState<APIReturn | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const keyInterpretations = {
     base_rarity: "bR",
@@ -32,31 +33,12 @@ const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
     piece_type: "pT",
     piece_color: "pC",
     rarity_score: "rS",
+    page: "page",
   };
 
-  type KEYS = {
-    base_rarity: string;
-    base_item: string;
-    body_rarity: string;
-    body_item: string;
-    head_rarity: string;
-    head_item: string;
-    felt_rarity: string;
-    felt_item: string;
-    main_material_rarity: string;
-    main_material_item: string;
-    alt_material_on: string;
-    alt_material_rarity: string;
-    alt_material_item: string;
-    accent_material_on: string;
-    accent_material_rarity: string;
-    accent_material_item: string;
-    environment: string;
-    board: string;
-    piece_type: string;
-    piece_color: string;
-    rarity_score: string;
-  };
+  useEffect(() => {
+    console.log(searchParams);
+  }, [searchParams]);
 
   function filterObjects(
     userFilters: RemainingCounts,
@@ -73,62 +55,12 @@ const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
     return newObj;
   }
 
-  const fetchWithFilters = async (url: string = "", page: number = 0) => {
-    const res = await fetch(
-      `https://devpawnhub.canversedebug.xyz/pieces?${url}&page=${page}`,
-      {
-        headers: {
-          "x-api-key": "SX/R0nGDq7PsaIVJ4OHH95mmMi5Sjz/WpAYIg1il1tn8",
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        method: "GET",
-      }
-    );
-    // The return value is *not* serialized
-    // You can return Date, Map, Set, etc.
-    // Recommendation: handle errors
-    if (!res.ok) {
-      // This will activate the closest `error.js` Error Boundary
-      console.log(res);
-      throw new Error("Failed to fetch data");
-    }
-
-    console.log(res);
-
-    let data = await res.json();
-
-    console.log(data);
-
-    // console.log("HERES THE RESULT:", await res.json());
-    setFetchedData(data);
-  };
-
   useEffect(() => {
-    console.log("API useeffect triggered");
-
-    if (Object.keys(filterObj).length > 0) {
-      console.log("No filters within filter object");
-      let newObj = filterObjects(filterObj, keyInterpretations);
-      let url = new URLSearchParams(newObj).toString();
-      if (previousRequest != filterObj) {
-        console.log("new request as object is now different");
-        //!TEMP FIX FOR RARITY SCORE BUG
-        if (url.includes("rS=17")) {
-          const replacement = url.replace("rS=17", "rS=18");
-          fetchWithFilters(replacement, 1);
-        } else fetchWithFilters(url, 1);
-      } else {
-        console.log("Same attribute filters requested. Requesting new page!");
-        fetchWithFilters(url, requestedPage);
-      }
+    if (filterObj) {
+      const newObj = filterObjects(filterObj, keyInterpretations);
+      const queryParams = new URLSearchParams(newObj);
     }
-    if (requestedPage > 0 && Object.keys(filterObj).length === 0) {
-      console.log("New page requested for initial data.");
-      fetchWithFilters("", requestedPage);
-    }
-    setPreviousRequest(filterObj);
-  }, [filterObj, requestedPage]);
+  }, [filterObj]);
 
   return (
     <div className="w-full h-full flex justify-center items-center ">
@@ -143,7 +75,6 @@ const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
         filterObj={filterObj}
         initialData={initialData}
         fetchedData={fetchedData}
-        setRequestedPage={setRequestedPage}
       />
     </div>
   );

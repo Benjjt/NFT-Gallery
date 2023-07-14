@@ -28,6 +28,30 @@ export type NFT = {
   json_id?: number;
 };
 
+export type KEYS = {
+  base_rarity: string;
+  base_item: string;
+  body_rarity: string;
+  body_item: string;
+  head_rarity: string;
+  head_item: string;
+  felt_rarity: string;
+  felt_item: string;
+  main_material_rarity: string;
+  main_material_item: string;
+  alt_material_on: string;
+  alt_material_rarity: string;
+  alt_material_item: string;
+  accent_material_on: string;
+  accent_material_rarity: string;
+  accent_material_item: string;
+  environment: string;
+  board: string;
+  piece_type: string;
+  piece_color: string;
+  rarity_score: string;
+};
+
 export interface RemainingCounts {
   accent_material_item?: {
     [key: string]: number;

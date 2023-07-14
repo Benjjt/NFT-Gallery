@@ -16,7 +16,7 @@ const FilterSection = ({
 }: {
   initialData: APIReturn;
   fetchedData: APIReturn | null;
-  filterObj: RemainingCounts;
+  filterObj: RemainingCounts | null;
   setFilterObj: Function;
 }) => {
   const { isFilterOpen } = useFilterButtonContext();
@@ -32,10 +32,6 @@ const FilterSection = ({
   });
 
   useEffect(() => {
-    !fetchedData && setDisplayedFilters(initialData.remaining_counts);
-  }, [initialData]);
-
-  useEffect(() => {
     if (fetchedData) {
       const remainingFilters: RemainingCounts = fetchedData.remaining_counts;
       setFiltersRemaining(remainingFilters);
@@ -47,7 +43,11 @@ const FilterSection = ({
   }, [fetchedData, initialData]);
 
   const handleFilterAction = (selection: string) => {
-    if (IDOfOpen in filterObj && filterObj[IDOfOpen] === selection) {
+    if (
+      filterObj &&
+      IDOfOpen in filterObj &&
+      (filterObj as any)[IDOfOpen] === selection
+    ) {
       console.log("item to be deleted");
       let newObj = { ...filterObj };
       delete newObj[IDOfOpen as keyof typeof filterObj];
@@ -113,12 +113,14 @@ const FilterSection = ({
                                 <span className="text-dark/80 ml-auto">
                                   {filtersRemaining
                                     ? IDOfOpen in filtersRemaining
-                                      ? filtersRemaining[IDOfOpen][item]
+                                      ? (filtersRemaining as any)[IDOfOpen][
+                                          item
+                                        ]
                                       : ""
                                     : displayedFilters[IDOfOpen][item]}
                                 </span>
 
-                                {filterObj[IDOfOpen] === item ? (
+                                {filterObj?.[IDOfOpen] === item ? (
                                   <BsFillCheckSquareFill className="fill-accentTwo  w-6 h-6 rounded-lg" />
                                 ) : (
                                   <div

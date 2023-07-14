@@ -11,7 +11,7 @@ const DefaultView = ({
   selectedNFT,
 }: {
   initialData: APIReturn;
-  fetchedData: APIReturn;
+  fetchedData: APIReturn | null;
   setSelectedNFT: Function;
   selectedNFT: NFT;
 }) => {

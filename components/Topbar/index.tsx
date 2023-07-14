@@ -6,7 +6,7 @@ import ResultNumber from "./ResultNumber";
 import { NFT, APIReturn } from "@/app/types";
 import Image from "next/image";
 import canverse from "../../public/images/canBlackText.png";
-const Topbar = ({ initialData }: { initialData: APIReturn }) => {
+const Topbar = ({ initialData }: { initialData: APIReturn | null }) => {
   return (
     <div className="flex justify-between items-center gap-8  w-full h-[3rem]  ">
       <Image width={150} height={125} src={canverse} alt="canverse logo" />
@@ -16,7 +16,7 @@ const Topbar = ({ initialData }: { initialData: APIReturn }) => {
         <span className="hidden group-hover:flex">WORK</span>
       </span>
       <FilterButton />
-      <ResultNumber number={initialData.total_records} />
+      <ResultNumber number={initialData?.total_records} />
       <Searchbar />
       <DisplayOptions />
     </div>

@@ -8,11 +8,9 @@ import { APIReturn } from "@/app/types";
 const PageNavigation = ({
   initialData,
   fetchedData,
-  setRequestedPage,
 }: {
   initialData: APIReturn;
   fetchedData: APIReturn;
-  setRequestedPage: Function;
 }) => {
   const [totalPages, setTotalPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(0);
@@ -35,7 +33,7 @@ const PageNavigation = ({
           <BsFillArrowLeftSquareFill
             onClick={() => {
               if (currentPage - 1 >= 1) console.log("calling previous page");
-              setRequestedPage(currentPage - 1);
+              // setRequestedPage(currentPage - 1);
             }}
             className="w-6 h-6 hover:fill-accentTwo hover:cursor-pointer"
           />
@@ -45,7 +43,7 @@ const PageNavigation = ({
             onClick={() => {
               if (currentPage + 1 <= totalPages)
                 console.log("calling next page");
-              setRequestedPage(currentPage + 1);
+              // setRequestedPage(currentPage + 1);
             }}
             className="w-6 h-6 hover:fill-accentTwo hover:cursor-pointer"
           />
