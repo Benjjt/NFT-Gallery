@@ -6,6 +6,7 @@ import LargeView from "./LargeView";
 import ListView from "./ListView";
 import { useFilterButtonContext } from "@/app/Context/store";
 import PageNavigation from "./PageNavigation";
+import DefaultGrid from "./DefaultGrid";
 
 const NFTRender = ({
   initialData,
@@ -20,7 +21,7 @@ const NFTRender = ({
   return (
     <div className="w-full h-full relative ">
       {currentDisplay === "default" && (
-        <DefaultView
+        <DefaultGrid
           setSelectedNFT={setSelectedNFT}
           initialData={initialData}
           fetchedData={fetchedData}

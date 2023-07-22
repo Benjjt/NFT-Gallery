@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useSpring, animated, useTransition } from "@react-spring/web";
 import { useFilterButtonContext } from "@/app/Context/store";
-import { NFT, APIReturn, RemainingCounts } from "@/app/types";
+import { NFT, APIReturn, RemainingCounts, UserFilters } from "@/app/types";
 import { FiChevronDown } from "react-icons/fi";
 import { BsFillCheckSquareFill } from "react-icons/bs";
 import { IoIosCloseCircle } from "react-icons/io";
@@ -16,7 +16,7 @@ const FilterSection = ({
 }: {
   initialData: APIReturn | null;
   fetchedData: APIReturn | null;
-  filterObj: RemainingCounts | null;
+  filterObj: UserFilters | null;
   setFilterObj: Function;
 }) => {
   const { isFilterOpen } = useFilterButtonContext();
@@ -39,25 +39,29 @@ const FilterSection = ({
       setFiltersRemaining(remainingFilters);
     } else if (initialData) {
       const initialFilters: RemainingCounts = initialData.remaining_counts;
-
+      console.log("INITIAL FILTERS: ", initialFilters);
       setDisplayedFilters(initialFilters);
     }
   }, [fetchedData, initialData]);
 
-  const handleFilterAction = (selection: string) => {
-    if (
-      filterObj &&
-      IDOfOpen in filterObj &&
-      (filterObj as any)[IDOfOpen] === selection
-    ) {
-      console.log("item to be deleted");
-      let newObj = { ...filterObj };
-      delete newObj[IDOfOpen as keyof typeof filterObj];
-      console.log("Updating state with deletion");
-      setFilterObj(newObj);
-    } else {
+  const handleFilterAction = (selection: Record<string, number>) => {
+    console.log(selection);
+    if (filterObj) {
       setFilterObj({ ...filterObj, [IDOfOpen]: selection });
-    }
+    } else setFilterObj({ [IDOfOpen]: selection });
+
+    // if (
+    //   filterObj &&
+    //   IDOfOpen in filterObj &&
+    //   (filterObj as any)[IDOfOpen] === selection
+    // ) {
+    //   console.log("item to be deleted");
+    //   let newObj = { ...filterObj };
+    //   delete newObj[IDOfOpen as keyof typeof filterObj];
+    //   console.log("Updating state with deletion");
+    //   setFilterObj(newObj);
+    // } else {
+    // }
   };
 
   return filtersAnimation(
@@ -76,7 +80,6 @@ const FilterSection = ({
                   <div
                     key={index}
                     className={`flex flex-col
-                   
                       hover:cursor-pointer hover:bg-dark/5
                       justify-between font-bold items-center w-full p-4  rounded-md`}
                   >
@@ -100,29 +103,37 @@ const FilterSection = ({
 
                     {IDOfOpen === item && (
                       <ul className="flex flex-col gap-4  justify-start items-start w-full mt-4 z-40  ">
-                        {Object.keys(displayedFilters[item]).map(
-                          (item, index) => {
+                        {Object.keys((displayedFilters as any)[item]).map(
+                          (item: string, index) => {
                             return (
                               <li
                                 key={item}
                                 onClick={() => {
                                   //*ADD FILTER TYPE AND FILTER TO ARRAY OF FILTER PARAMS
-                                  handleFilterAction(item);
+                                  handleFilterAction({
+                                    [item]: (displayedFilters as any)[IDOfOpen][
+                                      item
+                                    ][0],
+                                  });
                                 }}
                                 className={`w-full py-2 px-4  font-[600] text-sm rounded-md  flex justify-between gap-4 items-center group`}
                               >
                                 <span>{item.replaceAll("_", " ")}</span>
-                                <span className="text-dark/80 ml-auto">
+                                {/* <span className="text-dark/80 ml-auto">
                                   {filtersRemaining
                                     ? IDOfOpen in filtersRemaining
                                       ? (filtersRemaining as any)[IDOfOpen][
                                           item
                                         ]
                                       : ""
-                                    : displayedFilters[IDOfOpen][item]}
-                                </span>
+                                    : (displayedFilters as any)[IDOfOpen][item]}
+                                </span> */}
 
-                                {filterObj?.[IDOfOpen] === item ? (
+                                {filterObj &&
+                                Object.keys(filterObj).includes(IDOfOpen) &&
+                                Object.keys(
+                                  (filterObj as any)[IDOfOpen]
+                                ).includes(item) ? (
                                   <BsFillCheckSquareFill className="fill-accentTwo  w-6 h-6 rounded-lg" />
                                 ) : (
                                   <div

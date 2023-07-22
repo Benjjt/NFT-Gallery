@@ -1,35 +1,38 @@
-import { NFT } from "../app/types";
-
-function isNFT(obj: any): obj is NFT {
-  const keys: (keyof NFT)[] = [
-    "accent_material_item",
-    "accent_material_on",
-    "accent_material_rarity",
-    "alt_material_item",
-    "alt_material_on",
-    "alt_material_rarity",
-    "base_item",
-    "base_rarity",
-    "board",
-    "body_item",
-    "body_rarity",
-    "environment",
-    "felt_item",
-    "felt_rarity",
-    "head_item",
-    "head_rarity",
-    "main_material_item",
-    "main_material_rarity",
-    "pfp_file_name",
-    "piece_color",
-    "piece_name",
-    "piece_type",
-    "rarity_score",
-    "int_list",
-    "json_id",
+import { NumericObject, ValidKeys } from "@/app/types";
+export function isValidNumericObject(obj: NumericObject): boolean {
+  console.log("object being typechecked: ", obj);
+  const validKeys: string[] = [
+    "br",
+    "bi",
+    "bor",
+    "boi",
+    "hr",
+    "hi",
+    "fr",
+    "fi",
+    "mmr",
+    "mmi",
+    "amo",
+    "amr",
+    "ami",
+    "acmo",
+    "acr",
+    "acmi",
+    "e",
+    "b",
+    "pt",
+    "pc",
+    "rs",
+    "page",
   ];
 
-  return keys.every(
-    (key) => obj[key] === undefined || typeof obj[key] === typeof {}[key]
+  const isValidKey = (key: string): boolean => validKeys.includes(key);
+
+  const isNumeric = (value: any): boolean => {
+    return !isNaN(parseFloat(value)) && isFinite(value);
+  };
+
+  return Object.keys(obj).every(
+    (key) => isValidKey(key) && isNumeric((obj as any)[key])
   );
 }

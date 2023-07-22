@@ -1,10 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "canverse-io.imgix.net",
+        hostname: "static.canverse.io",
         port: "",
         pathname: "/pawnhub/pfprenders_jpg/**",
       },

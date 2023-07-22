@@ -2,18 +2,15 @@
 import { NFT, APIReturn } from "@/app/types";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import PageNavigation from "../PageNavigation";
 
 const DefaultView = ({
   initialData,
   fetchedData,
   setSelectedNFT,
-  selectedNFT,
 }: {
   initialData: APIReturn | null;
   fetchedData: APIReturn | null;
   setSelectedNFT: Function;
-  selectedNFT: NFT;
 }) => {
   const [NFTS, setNFTS] = useState<NFT[]>([]);
 
@@ -27,13 +24,9 @@ const DefaultView = ({
     }
   }, [fetchedData]);
 
-  useEffect(() => {
-    console.log(fetchedData);
-  }, [fetchedData]);
-
   return (
     <div className=" flex justify-start relative  items-center flex-wrap  p-4  pb-[4rem]  ">
-      {NFTS?.map((item, index) => {
+      {NFTS?.map((item: NFT, index) => {
         return (
           <div
             className={`flex relative transition-all flex-initial   justify-center items-center  m-[1%] w-[8rem] h-[8rem]  text-light rounded-xl font-bold hover:scale-105 bg-dark/80 hover:cursor-pointer ${
@@ -48,8 +41,8 @@ const DefaultView = ({
               fill={true}
               style={{ objectFit: "contain" }}
               className="rounded-xl"
-              alt={item.piece_name}
-              src={`https://canverse-io.imgix.net/pawnhub/pfprenders_jpg/${item.pfp_file_name}`}
+              alt={item.piece_name ? item.piece_name : "canVERSE NFT"}
+              src={`https://static.canverse.io/pwntemp/pawnhub/pfprenders_jpg/${item.pfp_file_name}`}
             />
           </div>
         );

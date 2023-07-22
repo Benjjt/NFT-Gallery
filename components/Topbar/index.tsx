@@ -2,7 +2,6 @@ import React from "react";
 import Searchbar from "./Searchbar";
 import DisplayOptions from "./DisplayOptions";
 import FilterButton from "./FilterButton";
-import ResultNumber from "./ResultNumber";
 import { NFT, APIReturn } from "@/app/types";
 import Image from "next/image";
 import canverse from "../../public/images/canBlackText.png";
@@ -16,7 +15,6 @@ const Topbar = ({ initialData }: { initialData: APIReturn | null }) => {
         <span className="hidden group-hover:flex">WORK</span>
       </span>
       <FilterButton />
-      <ResultNumber number={initialData?.total_records} />
       <Searchbar />
       <DisplayOptions />
     </div>

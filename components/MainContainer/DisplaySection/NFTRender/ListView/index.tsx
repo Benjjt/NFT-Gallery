@@ -8,9 +8,9 @@ const ListView = ({
   setSelectedNFT,
   fetchedData,
 }: {
-  initialData: APIReturn;
+  initialData: APIReturn | null;
   setSelectedNFT: Function;
-  fetchedData: APIReturn;
+  fetchedData: APIReturn | null;
 }) => {
   const [NFTS, setNFTS] = useState<NFT[]>([]);
 
@@ -18,15 +18,15 @@ const ListView = ({
     if (fetchedData?.records) {
       console.log("setting state to NEW values");
       setNFTS(fetchedData.records);
-    } else {
+    } else if (initialData?.records) {
       console.log("setting state to initial values");
-      setNFTS(initialData?.records);
+      setNFTS(initialData.records);
     }
   }, [fetchedData]);
 
   return (
     <div className="flex flex-col w-full gap-2 p-4">
-      {NFTS?.map((item, index) => {
+      {NFTS?.map((item: NFT, index) => {
         return (
           <div
             className="flex justify-start gap-8 p-6  hover:border-accentTwo transition-all items-center w-full h-[4rem]  rounded-xl font-bold text-dark border hover:cursor-pointer"
@@ -38,10 +38,10 @@ const ListView = ({
                 fill={true}
                 style={{ objectFit: "contain" }}
                 className="rounded-md"
-                alt={item.piece_name}
+                alt="canVERSE NFT"
                 // placeholder="blur"
                 // blurDataURL=""
-                src={`https://canverse-io.imgix.net/pawnhub/pfprenders_jpg/${item.pfp_file_name}`}
+                src={`https://static.canverse.io/pwntemp/pawnhub/pfprenders_jpg/${item.pfp_file_name}`}
               />
             </div>
             <span> {item.piece_name}</span>

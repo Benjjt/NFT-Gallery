@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import LoadingPlaceholders from "./LoadingPlaceholders";
 import NFTRender from "./NFTRender";
-import { APIReturn, NFT, RemainingCounts } from "@/app/types";
+import { APIReturn, NFT, RemainingCounts, UserFilters } from "@/app/types";
 import { IoIosCloseCircle } from "react-icons/io";
 import NFTDetails from "./NFTRender/NFTDetails";
 
@@ -14,7 +14,7 @@ const DisplaySection = ({
 }: {
   initialData: APIReturn | null;
   fetchedData: APIReturn | null;
-  filterObj: RemainingCounts | null;
+  filterObj: UserFilters | null;
   setFilterObj: Function;
 }) => {
   const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null);
@@ -22,6 +22,7 @@ const DisplaySection = ({
   const [intCopied, setIntCopied] = useState<boolean>(false);
 
   const deleteSelection = (key: string) => {
+    //!This currently deletes all selections under a given attribute selection.
     const newObj = { ...filterObj };
     delete newObj[key as keyof typeof filterObj];
     setFilterObj(newObj);
@@ -45,7 +46,7 @@ const DisplaySection = ({
                 <span>
                   {key.replaceAll("_", " ")}:{" "}
                   <span className="text-sm font-[700]">
-                    {(filterObj as any)[key].replaceAll("_", " ")}
+                    {Object.keys((filterObj as any)[key])}
                   </span>
                 </span>
                 <IoIosCloseCircle

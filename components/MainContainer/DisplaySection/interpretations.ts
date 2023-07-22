@@ -1,0 +1,26 @@
+import { ValidKeys } from "@/app/types";
+
+export const keyInterpretations: ValidKeys = {
+  base_rarity: "br",
+  base_item: "bi",
+  body_rarity: "bor",
+  body_item: "boi",
+  head_rarity: "hr",
+  head_item: "hi",
+  felt_rarity: "fr",
+  felt_item: "fi",
+  main_material_rarity: "mmr",
+  main_material_item: "mmi",
+  alt_material_on: "amo",
+  alt_material_rarity: "amr",
+  alt_material_item: "ami",
+  accent_material_on: "acmo",
+  accent_material_rarity: "acr",
+  accent_material_item: "acmi",
+  environment: "e",
+  board: "b",
+  piece_type: "pt",
+  piece_color: "pc",
+  rarity_score: "rs",
+  page: "page",
+};

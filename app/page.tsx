@@ -24,8 +24,6 @@ async function getNFTs() {
     throw new Error("Failed to fetch data");
   }
 
-  console.log(res);
-
   let data = await res.json();
 
   return data;

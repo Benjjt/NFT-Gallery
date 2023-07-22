@@ -23,7 +23,7 @@ const GlobalContext = createContext<ContextProps>({
 });
 
 export const FilterButtonContext = ({ children }: { children: any }) => {
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(true);
   const [currentDisplay, setCurrentDisplay] = useState("default");
 
   return (

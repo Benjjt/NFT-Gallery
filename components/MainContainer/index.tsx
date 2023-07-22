@@ -2,57 +2,77 @@
 import React, { useEffect, useState } from "react";
 import FilterSection from "./FilterSection";
 import DisplaySection from "./DisplaySection";
-import { NFT, APIReturn, RemainingCounts, KEYS } from "@/app/types";
+import {
+  NFT,
+  APIReturn,
+  RemainingCounts,
+  KEYS,
+  NumericObject,
+  UserFilters,
+  ValidKeys,
+} from "@/app/types";
 import { useRouter, useSearchParams } from "next/navigation";
+import { isValidNumericObject } from "../../utils/typeChecker";
+import { keyInterpretations } from "./DisplaySection/interpretations";
 
 const MainContainer = ({ initialData }: { initialData: APIReturn | null }) => {
-  const [filterObj, setFilterObj] = useState<RemainingCounts | null>(null);
+  const [filterObj, setFilterObj] = useState<UserFilters | null>(null);
   const [fetchedData, setFetchedData] = useState<APIReturn | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
 
   //*Check is made to see if filterObject has changed
   useEffect(() => {
+    console.log("FILTER OBJECT", filterObj);
     if (filterObj) {
-      //*If filer object is not null the filters become query param string which is pushed to router
-      const queryString = new URLSearchParams(filterObj).toString();
-      const fullUrl = `?${queryString}`;
-      router.push(fullUrl);
+      if (Object.keys(filterObj).length > 0) {
+        const newInterpretedObj = mergeObjects(filterObj, keyInterpretations);
+        const queryString = new URLSearchParams(
+          newInterpretedObj as any
+        ).toString();
+        router.push(`?${queryString}`);
+      } else router.push(`/`);
     }
   }, [filterObj]);
 
-  //*URL parameters turned back into object and compared against current UI filters
+  //*Type check URL parameters to make sure they are valid requests
   useEffect(() => {
-    if (searchParams && filterObj) {
-      console.log("Both filter object and URL filters present");
-      const filtersFromURL = urlParamsToObject(searchParams?.toString());
-      console.log("URL FILTERS: ", filtersFromURL);
-      console.log("CURRENT FILTER OBJECT: ", filterObj);
-      console.log(compareURlToFilterObj(filterObj, filtersFromURL));
-    } else if (searchParams && !filterObj) {
-      const filtersFromURL = urlParamsToObject(searchParams?.toString());
-      setFilterObj(filtersFromURL);
-      const url = filterObjects(filtersFromURL, keyInterpretations);
-      const queryString = new URLSearchParams(url).toString();
+    const filtersFromURL: NumericObject = urlParamsToObject(
+      searchParams?.toString()
+    );
+    console.log("filtersFromURL: ", filtersFromURL);
+
+    if (isValidNumericObject(filtersFromURL)) {
+      console.log("URL PASSED TYPE CHECKING");
+      const queryString = new URLSearchParams(filtersFromURL as any).toString();
+      const newFilterObject = createNewObjectWithMatches(
+        filtersFromURL,
+        keyInterpretations
+      );
+      console.log("NEW FILTER OBJECT", newFilterObject);
       getFilteredNFTs(queryString);
     }
   }, [searchParams]);
 
-  function compareURlToFilterObj(object1: any, object2: any) {
-    const keys1 = Object.keys(object1);
-    const keys2 = Object.keys(object2);
+  // Function to map keys from the second object to the first object's values
+  type AbbreviatedObj = { [key: string]: number };
+  type FullKeysObj = { [key: string]: string };
 
-    if (keys1.length !== keys2.length) {
-      return false;
-    }
+  function createNewObjectWithMatches(
+    AbbreviatedObj: AbbreviatedObj,
+    FullKeysObj: ValidKeys
+  ) {
+    let newObject = {};
 
-    for (let key of keys1) {
-      if (object1[key] !== object2[key]) {
-        return false;
+    for (let key1 in AbbreviatedObj) {
+      for (let key2 in FullKeysObj) {
+        if (key1 === (FullKeysObj as any)[key2]) {
+          newObject = { ...newObject, [key2]: AbbreviatedObj[key1] };
+        }
       }
     }
 
-    return true;
+    return newObject;
   }
 
   function urlParamsToObject(urlParams: string) {
@@ -60,12 +80,20 @@ const MainContainer = ({ initialData }: { initialData: APIReturn | null }) => {
       urlParams = urlParams.substring(1);
     }
     const paramPairs: string[] = urlParams.split("&");
-    const paramsObject: Record<string, string> = {};
+    const paramsObject: Record<string, number> = {};
     for (let i = 0; i < paramPairs.length; i++) {
       const param: string[] = paramPairs[i].split("=");
       const key: string = decodeURIComponent(param[0]);
       const value: string = decodeURIComponent(param[1]).replaceAll("+", " ");
-      paramsObject[key] = value;
+      const numericValue: number = parseFloat(value); // Parse the value to a number
+
+      if (!isNaN(numericValue)) {
+        paramsObject[key] = numericValue;
+      } else {
+        //if NaN ignore key value pair.
+        //!If there are attributes that don't accept integers as thier reference, exceptions can be made here
+        continue;
+      }
     }
 
     return paramsObject;
@@ -95,44 +123,30 @@ const MainContainer = ({ initialData }: { initialData: APIReturn | null }) => {
     }
   }
 
-  const keyInterpretations = {
-    base_rarity: "bR",
-    base_item: "bI",
-    body_rarity: "boR",
-    body_item: "boI",
-    head_rarity: "hR",
-    head_item: "hI",
-    felt_rarity: "fR",
-    felt_item: "fI",
-    main_material_rarity: "mmR",
-    main_material_item: "mmI",
-    alt_material_on: "aMO",
-    alt_material_rarity: "aMR",
-    alt_material_item: "aMI",
-    accent_material_on: "acMO",
-    accent_material_rarity: "acMR",
-    accent_material_item: "acMI",
-    environment: "e",
-    board: "b",
-    piece_type: "pT",
-    piece_color: "pC",
-    rarity_score: "rS",
-    page: "page",
-  };
+  function mergeObjects(
+    userFilters: UserFilters,
+    keyInterpretations: ValidKeys
+  ): Record<string, number[]> {
+    const output: Record<string, number[]> = {};
 
-  function filterObjects(
-    userFilters: RemainingCounts,
-    interpretations: KEYS
-  ): Record<string, number> {
-    const newObj: Record<string, number> = {};
-    for (const key in interpretations) {
-      if (userFilters.hasOwnProperty(key)) {
-        newObj[interpretations[key]] = Object.keys(
-          initialData.remaining_counts[key]
-        ).indexOf(userFilters[key]);
+    for (const filterKey in userFilters) {
+      if (filterKey in keyInterpretations) {
+        const interpretationKey = (keyInterpretations as any)[filterKey];
+        const subKeys = (userFilters as any)[filterKey];
+
+        for (const subKey in subKeys) {
+          const value = subKeys[subKey];
+
+          if (!output[interpretationKey]) {
+            output[interpretationKey] = [];
+          }
+
+          output[interpretationKey].push(value);
+        }
       }
     }
-    return newObj;
+
+    return output;
   }
 
   return (

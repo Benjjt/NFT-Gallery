@@ -8,9 +8,9 @@ const LargeView = ({
   setSelectedNFT,
   fetchedData,
 }: {
-  initialData: APIReturn;
+  initialData: APIReturn | null;
   setSelectedNFT: Function;
-  fetchedData: APIReturn;
+  fetchedData: APIReturn | null;
 }) => {
   const [NFTS, setNFTS] = useState<NFT[]>([]);
 
@@ -18,9 +18,9 @@ const LargeView = ({
     if (fetchedData?.records) {
       console.log("setting state to NEW values");
       setNFTS(fetchedData.records);
-    } else {
+    } else if (initialData?.records) {
       console.log("setting state to initial values");
-      setNFTS(initialData?.records);
+      setNFTS(initialData.records);
     }
   }, [fetchedData]);
 
@@ -37,15 +37,12 @@ const LargeView = ({
               fill={true}
               style={{ objectFit: "contain" }}
               className="rounded-xl"
-              alt={item.piece_name}
-              // placeholder="blur"
-              // blurDataURL=""
-              src={`https://canverse-io.imgix.net/pawnhub/pfprenders_jpg/${item.pfp_file_name}`}
+              alt="canVERSE NFT"
+              src={`https://static.canverse.io/pwntemp/pawnhub/pfprenders_jpg/${item.pfp_file_name}`}
             />
           </div>
         );
       })}
-      {/* <div className="flex-1  ml-4 " /> */}
     </div>
   );
 };
