@@ -15,7 +15,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { isValidNumericObject } from "../../utils/typeChecker";
 import { keyInterpretations } from "./DisplaySection/interpretations";
 
-const MainContainer = ({ initialData }: { initialData: APIReturn | null }) => {
+const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
   const [filterObj, setFilterObj] = useState<UserFilters | null>(null);
   const [fetchedData, setFetchedData] = useState<APIReturn | null>(null);
   const router = useRouter();
@@ -23,8 +23,8 @@ const MainContainer = ({ initialData }: { initialData: APIReturn | null }) => {
 
   //*Check is made to see if filterObject has changed
   useEffect(() => {
-    console.log("FILTER OBJECT", filterObj);
     if (filterObj) {
+      console.log("HERE IS THE FORMAT OF A FILTER OBJECT: ", filterObj);
       if (Object.keys(filterObj).length > 0) {
         const newInterpretedObj = mergeObjects(filterObj, keyInterpretations);
         const queryString = new URLSearchParams(
@@ -43,20 +43,27 @@ const MainContainer = ({ initialData }: { initialData: APIReturn | null }) => {
     console.log("filtersFromURL: ", filtersFromURL);
 
     if (isValidNumericObject(filtersFromURL)) {
-      console.log("URL PASSED TYPE CHECKING");
       const queryString = new URLSearchParams(filtersFromURL as any).toString();
+
+      //swaps key interpretations back for full strings
       const newFilterObject = createNewObjectWithMatches(
         filtersFromURL,
         keyInterpretations
       );
-      console.log("NEW FILTER OBJECT", newFilterObject);
+
+      //swaps integers for coresponding attribute names
+      const newFiltersFromURL = findAndAddAttributes(newFilterObject);
+      setFilterObj(newFiltersFromURL);
+
+      //call API with original query URL
       getFilteredNFTs(queryString);
+    } else {
+      //!SHOW INVALID URL ERROR.
     }
   }, [searchParams]);
 
   // Function to map keys from the second object to the first object's values
   type AbbreviatedObj = { [key: string]: number };
-  type FullKeysObj = { [key: string]: string };
 
   function createNewObjectWithMatches(
     AbbreviatedObj: AbbreviatedObj,
@@ -147,6 +154,29 @@ const MainContainer = ({ initialData }: { initialData: APIReturn | null }) => {
     }
 
     return output;
+  }
+
+  function findAndAddAttributes(
+    orginalObj: Record<string, number>
+  ): Record<string, any> {
+    let newObj: Record<string, any> = {};
+    let fullFilterList: RemainingCounts = initialData.remaining_counts;
+    for (const key1 in orginalObj) {
+      for (const key2 in fullFilterList) {
+        if (key1 == key2) {
+          for (const key3 in (fullFilterList as any)[key2]) {
+            if (orginalObj[key1] == (fullFilterList as any)[key2][key3][0]) {
+              newObj = {
+                ...newObj,
+                [key1]: { [key3]: (fullFilterList as any)[key2][key3][0] },
+              };
+            }
+          }
+        }
+      }
+    }
+
+    return newObj;
   }
 
   return (
