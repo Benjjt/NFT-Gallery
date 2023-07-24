@@ -144,6 +144,7 @@ export interface UserFilters {
   rarity_score?: {
     [key: string]: number;
   };
+  page?: number;
 }
 
 export interface RemainingCounts {

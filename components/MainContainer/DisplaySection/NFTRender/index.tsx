@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { APIReturn, NFT } from "@/app/types";
+import { APIReturn, NFT, UserFilters } from "@/app/types";
 import DefaultView from "./DefaultView";
 import LargeView from "./LargeView";
 import ListView from "./ListView";
@@ -12,10 +12,16 @@ const NFTRender = ({
   initialData,
   fetchedData,
   setSelectedNFT,
+  setFilterObj,
+  filterObj,
+  setRequestedPage,
 }: {
   initialData: APIReturn | null;
   fetchedData: APIReturn | null;
   setSelectedNFT: Function;
+  setFilterObj: Function;
+  filterObj: UserFilters | null;
+  setRequestedPage: Function;
 }) => {
   const { currentDisplay, setCurrentDisplay } = useFilterButtonContext();
   return (
@@ -41,7 +47,13 @@ const NFTRender = ({
           fetchedData={fetchedData}
         />
       )}
-      <PageNavigation initialData={initialData} fetchedData={fetchedData} />
+      <PageNavigation
+        initialData={initialData}
+        fetchedData={fetchedData}
+        setFilterObj={setFilterObj}
+        filterObj={filterObj}
+        setRequestedPage={setRequestedPage}
+      />
     </div>
   );
 };

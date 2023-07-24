@@ -11,11 +11,13 @@ const DisplaySection = ({
   fetchedData,
   filterObj,
   setFilterObj,
+  setRequestedPage,
 }: {
   initialData: APIReturn | null;
   fetchedData: APIReturn | null;
   filterObj: UserFilters | null;
   setFilterObj: Function;
+  setRequestedPage: Function;
 }) => {
   const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null);
   const [copyClicked, setCopyClicked] = useState<boolean>(false);
@@ -38,31 +40,35 @@ const DisplaySection = ({
       <div className="flex justify-start items-center gap-2 flex-wrap p-4 ">
         {filterObj &&
           Object.keys(filterObj).map((key, index) => {
-            return (
-              <div
-                key={index}
-                className="p-2 gap-2 border rounded-lg flex justify-start items-center"
-              >
-                <span>
-                  {key.replaceAll("_", " ")}:{" "}
-                  <span className="text-sm font-[700]">
-                    {Object.keys((filterObj as any)[key])}
+            if (key !== "page")
+              return (
+                <div
+                  key={index}
+                  className="p-2 gap-2 border rounded-lg flex justify-start items-center"
+                >
+                  <span>
+                    {key.replaceAll("_", " ")}:{" "}
+                    <span className="text-sm font-[700]">
+                      {Object.keys((filterObj as any)[key])}
+                    </span>
                   </span>
-                </span>
-                <IoIosCloseCircle
-                  onClick={() => {
-                    deleteSelection(key);
-                  }}
-                  className="w-6 h-6 hover:cursor-pointer hover:fill-accentTwo transition-all"
-                />
-              </div>
-            );
+                  <IoIosCloseCircle
+                    onClick={() => {
+                      deleteSelection(key);
+                    }}
+                    className="w-6 h-6 hover:cursor-pointer hover:fill-accentTwo transition-all"
+                  />
+                </div>
+              );
           })}
       </div>
       <NFTRender
         initialData={initialData}
         fetchedData={fetchedData}
         setSelectedNFT={setSelectedNFT}
+        setFilterObj={setFilterObj}
+        filterObj={filterObj}
+        setRequestedPage={setRequestedPage}
       />
       {selectedNFT && (
         <NFTDetails

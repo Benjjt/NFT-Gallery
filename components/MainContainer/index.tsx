@@ -18,44 +18,50 @@ import { keyInterpretations } from "./DisplaySection/interpretations";
 const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
   const [filterObj, setFilterObj] = useState<UserFilters | null>(null);
   const [fetchedData, setFetchedData] = useState<APIReturn | null>(null);
+  const [requestedPage, setRequestedPage] = useState<number>(1);
   const router = useRouter();
   const searchParams = useSearchParams();
 
   //*Check is made to see if filterObject has changed
   useEffect(() => {
     if (filterObj) {
-      console.log("HERE IS THE FORMAT OF A FILTER OBJECT: ", filterObj);
       if (Object.keys(filterObj).length > 0) {
-        const newInterpretedObj = mergeObjects(filterObj, keyInterpretations);
+        let newInterpretedObj = mergeObjects(filterObj, keyInterpretations);
+        if ("page" in filterObj) {
+          newInterpretedObj = { ...newInterpretedObj, page: [filterObj.page] };
+        }
         const queryString = new URLSearchParams(
           newInterpretedObj as any
         ).toString();
-        router.push(`?${queryString}`);
+        router.push(`/?${queryString}`);
       } else router.push(`/`);
     }
   }, [filterObj]);
 
   //*Type check URL parameters to make sure they are valid requests
   useEffect(() => {
+    console.log(searchParams?.toString());
     const filtersFromURL: NumericObject = urlParamsToObject(
       searchParams?.toString()
     );
-    console.log("filtersFromURL: ", filtersFromURL);
+    console.log("filters from URL", filtersFromURL);
 
     if (isValidNumericObject(filtersFromURL)) {
       const queryString = new URLSearchParams(filtersFromURL as any).toString();
-
-      //swaps key interpretations back for full strings
+      console.log("query string", queryString);
+      // //swaps key interpretations back for full strings
       const newFilterObject = createNewObjectWithMatches(
         filtersFromURL,
         keyInterpretations
       );
 
-      //swaps integers for coresponding attribute names
+      console.log("new filter object", newFilterObject);
+      // //swaps integers for coresponding attribute names
       const newFiltersFromURL = findAndAddAttributes(newFilterObject);
-      setFilterObj(newFiltersFromURL);
 
-      //call API with original query URL
+      console.log("new filters formatted:", newFiltersFromURL);
+      setFilterObj(newFiltersFromURL);
+      // //call API with original query URL
       getFilteredNFTs(queryString);
     } else {
       //!SHOW INVALID URL ERROR.
@@ -122,7 +128,6 @@ const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
 
     if (!res.ok) {
       // This will activate the closest `error.js` Error Boundary
-      console.log(res);
       throw new Error("Failed to fetch data");
     } else {
       let data = await res.json();
@@ -162,18 +167,21 @@ const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
     let newObj: Record<string, any> = {};
     let fullFilterList: RemainingCounts = initialData.remaining_counts;
     for (const key1 in orginalObj) {
-      for (const key2 in fullFilterList) {
-        if (key1 == key2) {
-          for (const key3 in (fullFilterList as any)[key2]) {
-            if (orginalObj[key1] == (fullFilterList as any)[key2][key3][0]) {
-              newObj = {
-                ...newObj,
-                [key1]: { [key3]: (fullFilterList as any)[key2][key3][0] },
-              };
+      if (key1 === "page") {
+        newObj = { ...newObj, page: orginalObj[key1] };
+      } else
+        for (const key2 in fullFilterList) {
+          if (key1 == key2) {
+            for (const key3 in (fullFilterList as any)[key2]) {
+              if (orginalObj[key1] == (fullFilterList as any)[key2][key3][0]) {
+                newObj = {
+                  ...newObj,
+                  [key1]: { [key3]: (fullFilterList as any)[key2][key3][0] },
+                };
+              }
             }
           }
         }
-      }
     }
 
     return newObj;
@@ -192,6 +200,7 @@ const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
         filterObj={filterObj}
         initialData={initialData}
         fetchedData={fetchedData}
+        setRequestedPage={setRequestedPage}
       />
     </div>
   );
