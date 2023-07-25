@@ -213,6 +213,16 @@ export interface RemainingCounts {
   };
 }
 
+export const FilterKeyOrder = [
+  "piece_type",
+  "board",
+  "environment",
+  "head_item",
+  "body_item",
+  "alt_material_on",
+  "alt_material_on",
+];
+
 export type APIReturn = {
   total_records: number;
   total_pages: number;

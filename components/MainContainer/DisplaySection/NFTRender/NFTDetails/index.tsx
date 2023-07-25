@@ -48,7 +48,7 @@ const NFTDetails = ({
           return (
             <li
               className="flex justify-start items-center gap-2 w-full h-full "
-              key={(selectedNFT as any)[key].json_id}
+              key={selectedNFT.json_id}
             >
               <span className="font-bold">{key} :</span>
               <span> {selectedNFT[key as keyof typeof selectedNFT]}</span>
