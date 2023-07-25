@@ -1,11 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useSpring, animated, useTransition } from "@react-spring/web";
+import { useSpring, animated, useTransition, update } from "@react-spring/web";
 import { useFilterButtonContext } from "@/app/Context/store";
 import { NFT, APIReturn, RemainingCounts, UserFilters } from "@/app/types";
 import { FiChevronDown } from "react-icons/fi";
 import { BsFillCheckSquareFill } from "react-icons/bs";
 import { IoIosCloseCircle } from "react-icons/io";
+import { AiFillLock } from "react-icons/ai";
 import { CgCloseR } from "react-icons/cg";
 
 const FilterSection = ({
@@ -14,15 +15,14 @@ const FilterSection = ({
   filterObj,
   setFilterObj,
 }: {
-  initialData: APIReturn | null;
+  initialData: APIReturn;
   fetchedData: APIReturn | null;
   filterObj: UserFilters | null;
   setFilterObj: Function;
 }) => {
   const { isFilterOpen } = useFilterButtonContext();
-  const [displayedFilters, setDisplayedFilters] = useState<RemainingCounts>({});
-  const [filtersRemaining, setFiltersRemaining] =
-    useState<RemainingCounts | null>(null);
+  const [initialFilters, setInitialFilters] = useState<RemainingCounts>({});
+  const [updatedFilters, setUpdatedFilters] = useState<RemainingCounts>({});
   const [IDOfOpen, setIDOfOpen] = useState<string>("");
   const filtersAnimation = useTransition(isFilterOpen, {
     from: { opacity: 0, maxWidth: 0, zIndex: 999999 },
@@ -31,18 +31,50 @@ const FilterSection = ({
     // delay: isFilterOpen ? 0 : 400,
   });
 
+  //Set both state objects using same data on first load
   useEffect(() => {
+    const firstCallFilters: RemainingCounts = initialData.remaining_counts;
+    setInitialFilters(firstCallFilters);
+    setUpdatedFilters(firstCallFilters);
+  }, []);
+
+  useEffect(() => {
+    console.log("FILTERS BEING DISPLAYED", updatedFilters);
+  }, [updatedFilters]);
+
+  useEffect(() => {
+    // Your subsequent API call to get the updated remaining counts.
+    // Let's assume the response is stored in a variable called `updatedApiResponse`.
     if (fetchedData) {
-      console.log("setting remaining counts");
-      console.log(fetchedData.remaining_counts);
-      const remainingFilters: RemainingCounts = fetchedData.remaining_counts;
-      setFiltersRemaining(remainingFilters);
-    } else if (initialData) {
-      const initialFilters: RemainingCounts = initialData.remaining_counts;
-      console.log("INITIAL FILTERS: ", initialFilters);
-      setDisplayedFilters(initialFilters);
+      let newUpdatedFilters: RemainingCounts = { ...initialFilters };
+      const APIFilterReturn: RemainingCounts = fetchedData.remaining_counts;
+      for (const key in newUpdatedFilters) {
+        if (key in APIFilterReturn) {
+          // Update the value at index 1 of the number array with the value from APIFilterReturn
+          for (const attribute in (newUpdatedFilters as any)[key]) {
+            if (
+              (APIFilterReturn as any)[key] &&
+              (APIFilterReturn as any)[key][attribute]
+            ) {
+              (newUpdatedFilters as any)[key][attribute][1] = (
+                APIFilterReturn as any
+              )[key][attribute][1];
+            } else {
+              // Handle the case where the nested key or attribute doesn't exist in APIFilterReturn
+              (newUpdatedFilters as any)[key][attribute][1] = 0;
+            }
+          }
+        } else {
+          // If the key is missing in APIFilterReturn, set the value at index 1 to 0
+          for (const attribute in (newUpdatedFilters as any)[key]) {
+            (newUpdatedFilters as any)[key][attribute][1] = 0;
+          }
+        }
+      }
+
+      setUpdatedFilters(newUpdatedFilters);
     }
-  }, [fetchedData, initialData]);
+  }, [fetchedData, initialFilters]);
 
   const handleFilterAction = (selection: Record<string, number>) => {
     console.log(selection);
@@ -75,7 +107,7 @@ const FilterSection = ({
             <h2 className="text-xl w-full bg-light font-bold">TRAITS</h2>
 
             <ul className="flex flex-col justify-start items-start gap-2  w-full h-full ">
-              {Object.keys(displayedFilters).map((item, index) => {
+              {Object.keys(updatedFilters).map((item, index) => {
                 return (
                   <div
                     key={index}
@@ -103,46 +135,66 @@ const FilterSection = ({
 
                     {IDOfOpen === item && (
                       <ul className="flex flex-col gap-4  justify-start items-start w-full mt-4 z-40  ">
-                        {Object.keys((displayedFilters as any)[item]).map(
+                        {Object.keys((updatedFilters as any)[item]).map(
                           (item: string, index) => {
                             return (
                               <li
                                 key={item}
                                 onClick={() => {
                                   //*ADD FILTER TYPE AND FILTER TO ARRAY OF FILTER PARAMS
-                                  handleFilterAction({
-                                    [item]: (displayedFilters as any)[IDOfOpen][
+                                  if (
+                                    (updatedFilters as any)[IDOfOpen][
                                       item
-                                    ][0],
-                                  });
+                                    ][1] !== 0
+                                  ) {
+                                    handleFilterAction({
+                                      [item]: (updatedFilters as any)[IDOfOpen][
+                                        item
+                                      ][0],
+                                    });
+                                  }
                                 }}
-                                className={`w-full py-2 px-4  font-[600] text-sm rounded-md  flex justify-between gap-4 items-center group`}
+                                className={`w-full py-2 px-4  font-[600] text-sm rounded-md  flex justify-between gap-4 items-center group `}
                               >
                                 <span>{item.replaceAll("_", " ")}</span>
-                                {/* <span className="text-dark/80 ml-auto">
-                                  {filtersRemaining
-                                    ? IDOfOpen in filtersRemaining
-                                      ? (filtersRemaining as any)[IDOfOpen][
-                                          item
-                                        ]
-                                      : ""
-                                    : (displayedFilters as any)[IDOfOpen][item]}
-                                </span> */}
 
-                                {filterObj &&
-                                Object.keys(filterObj).includes(IDOfOpen) &&
-                                Object.keys(
-                                  (filterObj as any)[IDOfOpen]
-                                ).includes(item) ? (
-                                  <BsFillCheckSquareFill className="fill-accentTwo  w-6 h-6 rounded-lg" />
-                                ) : (
-                                  <div
-                                    className={`w-6 h-6  rounded-lg 
+                                <span className="text-dark/80 ml-auto">
+                                  {(updatedFilters as any)[IDOfOpen][item][1] !=
+                                    0 &&
+                                    (updatedFilters as any)[IDOfOpen][item][1]}
+                                </span>
+                                {(updatedFilters as any)[IDOfOpen][item][1] !=
+                                0 ? (
+                                  filterObj &&
+                                  Object.keys(filterObj).includes(IDOfOpen) &&
+                                  Object.keys(
+                                    (filterObj as any)[IDOfOpen]
+                                  ).includes(item) ? (
+                                    <BsFillCheckSquareFill className="fill-accentTwo  w-6 h-6 rounded-lg" />
+                                  ) : (
+                                    <div
+                                      className={`w-6 h-6  rounded-lg 
                                   flex justify-center items-center border
                                 
                                 `}
+                                    >
+                                      <BsFillCheckSquareFill className="group-hover:fill-accentTwo/50 hidden group-hover:flex w-6 h-6 rounded-lg" />
+                                    </div>
+                                  )
+                                ) : filterObj &&
+                                  Object.keys(filterObj).includes(IDOfOpen) &&
+                                  Object.keys(
+                                    (filterObj as any)[IDOfOpen]
+                                  ).includes(item) ? (
+                                  <BsFillCheckSquareFill className="fill-accentTwo  w-6 h-6 rounded-lg" />
+                                ) : (
+                                  <div
+                                    className={`w-6 h-6   
+                              flex justify-center items-center 
+                            
+                            `}
                                   >
-                                    <BsFillCheckSquareFill className="group-hover:fill-accentTwo/50 hidden group-hover:flex w-6 h-6 rounded-lg" />
+                                    <AiFillLock className="fill-dark/80 w-8 h-8" />
                                   </div>
                                 )}
                               </li>

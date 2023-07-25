@@ -27,8 +27,10 @@ const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
     if (filterObj) {
       if (Object.keys(filterObj).length > 0) {
         let newInterpretedObj = mergeObjects(filterObj, keyInterpretations);
-        if ("page" in filterObj) {
-          newInterpretedObj = { ...newInterpretedObj, page: [filterObj.page] };
+        //checks to see if user has supplied a page filter
+        if (filterObj.hasOwnProperty("page") && filterObj.page) {
+          let pageNumber: number = filterObj.page;
+          newInterpretedObj = { ...newInterpretedObj, page: [pageNumber] };
         }
         const queryString = new URLSearchParams(
           newInterpretedObj as any
@@ -40,28 +42,23 @@ const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
 
   //*Type check URL parameters to make sure they are valid requests
   useEffect(() => {
-    console.log(searchParams?.toString());
     const filtersFromURL: NumericObject = urlParamsToObject(
       searchParams?.toString()
     );
-    console.log("filters from URL", filtersFromURL);
 
     if (isValidNumericObject(filtersFromURL)) {
       const queryString = new URLSearchParams(filtersFromURL as any).toString();
-      console.log("query string", queryString);
-      // //swaps key interpretations back for full strings
+      //swaps key interpretations back for full strings
       const newFilterObject = createNewObjectWithMatches(
         filtersFromURL,
         keyInterpretations
       );
 
-      console.log("new filter object", newFilterObject);
-      // //swaps integers for coresponding attribute names
+      //swaps integers for coresponding attribute names
       const newFiltersFromURL = findAndAddAttributes(newFilterObject);
 
-      console.log("new filters formatted:", newFiltersFromURL);
       setFilterObj(newFiltersFromURL);
-      // //call API with original query URL
+      //call API with original query URL
       getFilteredNFTs(queryString);
     } else {
       //!SHOW INVALID URL ERROR.
