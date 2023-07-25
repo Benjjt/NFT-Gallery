@@ -23,7 +23,8 @@ const FilterSection = ({
   const { isFilterOpen } = useFilterButtonContext();
   const [initialFilters, setInitialFilters] = useState<RemainingCounts>({});
   const [updatedFilters, setUpdatedFilters] = useState<RemainingCounts>({});
-  const [IDOfOpen, setIDOfOpen] = useState<string>("");
+  const [IDOfOpen, setIDOfOpen] = useState<string[]>([]);
+
   const filtersAnimation = useTransition(isFilterOpen, {
     from: { opacity: 0, maxWidth: 0, zIndex: 999999 },
     enter: { opacity: 1, maxWidth: 400, zIndex: 999999 },
@@ -39,8 +40,8 @@ const FilterSection = ({
   }, []);
 
   useEffect(() => {
-    console.log("FILTERS BEING DISPLAYED", updatedFilters);
-  }, [updatedFilters]);
+    console.log(IDOfOpen);
+  }, [IDOfOpen]);
 
   useEffect(() => {
     // Your subsequent API call to get the updated remaining counts.
@@ -76,11 +77,27 @@ const FilterSection = ({
     }
   }, [fetchedData, initialFilters]);
 
-  const handleFilterAction = (selection: Record<string, number>) => {
+  const toggleID = (clickedString: string) => {
+    setIDOfOpen((prevIDs) => {
+      const index = prevIDs.indexOf(clickedString);
+      if (index !== -1) {
+        // String is already in the array, so remove it
+        return prevIDs.filter((id) => id !== clickedString);
+      } else {
+        // String is not in the array, so add it
+        return [...prevIDs, clickedString];
+      }
+    });
+  };
+
+  const handleFilterAction = (
+    selection: Record<string, number>,
+    parentKey: string
+  ) => {
     console.log(selection);
     if (filterObj) {
-      setFilterObj({ ...filterObj, [IDOfOpen]: selection });
-    } else setFilterObj({ [IDOfOpen]: selection });
+      setFilterObj({ ...filterObj, [parentKey]: selection });
+    } else setFilterObj({ [parentKey]: selection });
 
     // if (
     //   filterObj &&
@@ -107,7 +124,7 @@ const FilterSection = ({
             <h2 className="text-xl w-full bg-light font-bold">TRAITS</h2>
 
             <ul className="flex flex-col justify-start items-start gap-2  w-full h-full ">
-              {Object.keys(updatedFilters).map((item, index) => {
+              {Object.keys(updatedFilters).map((parentKey, index) => {
                 return (
                   <div
                     key={index}
@@ -117,59 +134,64 @@ const FilterSection = ({
                   >
                     <div
                       onClick={() => {
-                        if (IDOfOpen === item) {
-                          setIDOfOpen("");
-                        } else setIDOfOpen(item);
+                        toggleID(parentKey);
                       }}
                       className="flex justify-between items-center w-full"
                     >
-                      <li>{item.replaceAll("_", " ")}</li>
+                      <li>{parentKey.replaceAll("_", " ")}</li>
                       <div className="flex justify-center items-center gap-4 ">
                         <FiChevronDown
                           className={`w-6 h-6 transition-all ${
-                            IDOfOpen === item && "rotate-180"
+                            IDOfOpen.includes(parentKey) && "rotate-180"
                           } `}
                         />
                       </div>
                     </div>
 
-                    {IDOfOpen === item && (
+                    {IDOfOpen.includes(parentKey) && (
                       <ul className="flex flex-col gap-4  justify-start items-start w-full mt-4 z-40  ">
-                        {Object.keys((updatedFilters as any)[item]).map(
-                          (item: string, index) => {
+                        {Object.keys((updatedFilters as any)[parentKey]).map(
+                          (childKey: string, index) => {
                             return (
                               <li
-                                key={item}
+                                key={childKey}
                                 onClick={() => {
                                   //*ADD FILTER TYPE AND FILTER TO ARRAY OF FILTER PARAMS
                                   if (
-                                    (updatedFilters as any)[IDOfOpen][
-                                      item
+                                    (updatedFilters as any)[parentKey][
+                                      childKey
                                     ][1] !== 0
                                   ) {
-                                    handleFilterAction({
-                                      [item]: (updatedFilters as any)[IDOfOpen][
-                                        item
-                                      ][0],
-                                    });
+                                    handleFilterAction(
+                                      {
+                                        [childKey]: (updatedFilters as any)[
+                                          parentKey
+                                        ][childKey][0],
+                                      },
+                                      parentKey
+                                    );
                                   }
                                 }}
                                 className={`w-full py-2 px-4  font-[600] text-sm rounded-md  flex justify-between gap-4 items-center group `}
                               >
-                                <span>{item.replaceAll("_", " ")}</span>
+                                <span>{childKey.replaceAll("_", " ")}</span>
 
                                 <span className="text-dark/80 ml-auto">
-                                  {(updatedFilters as any)[IDOfOpen][item][1] !=
-                                    0 &&
-                                    (updatedFilters as any)[IDOfOpen][item][1]}
+                                  {(updatedFilters as any)[parentKey][
+                                    childKey
+                                  ][1] != 0 &&
+                                    (updatedFilters as any)[parentKey][
+                                      childKey
+                                    ][1]}
                                 </span>
-                                {(updatedFilters as any)[IDOfOpen][item][1] !=
-                                0 ? (
+                                {(updatedFilters as any)[parentKey][
+                                  childKey
+                                ][1] != 0 ? (
                                   filterObj &&
-                                  Object.keys(filterObj).includes(IDOfOpen) &&
+                                  Object.keys(filterObj).includes(parentKey) &&
                                   Object.keys(
-                                    (filterObj as any)[IDOfOpen]
-                                  ).includes(item) ? (
+                                    (filterObj as any)[parentKey]
+                                  ).includes(childKey) ? (
                                     <BsFillCheckSquareFill className="fill-accentTwo  w-6 h-6 rounded-lg" />
                                   ) : (
                                     <div
@@ -182,10 +204,10 @@ const FilterSection = ({
                                     </div>
                                   )
                                 ) : filterObj &&
-                                  Object.keys(filterObj).includes(IDOfOpen) &&
+                                  Object.keys(filterObj).includes(parentKey) &&
                                   Object.keys(
-                                    (filterObj as any)[IDOfOpen]
-                                  ).includes(item) ? (
+                                    (filterObj as any)[parentKey]
+                                  ).includes(childKey) ? (
                                   <BsFillCheckSquareFill className="fill-accentTwo  w-6 h-6 rounded-lg" />
                                 ) : (
                                   <div
