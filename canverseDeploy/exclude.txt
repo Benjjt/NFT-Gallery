@@ -1,0 +1,8 @@
+.next/
+canverseDeploy/
+node_modules/
+.envrc
+.vscode/
+.git/
+next-env.d.ts
+.gitignore
