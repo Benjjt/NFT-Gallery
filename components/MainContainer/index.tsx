@@ -17,6 +17,9 @@ import { keyInterpretations } from "./DisplaySection/interpretations";
 
 const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
   const [filterObj, setFilterObj] = useState<UserFilters | null>(null);
+  const [previousFilters, setPreviousFilters] = useState<UserFilters | null>(
+    null
+  );
   const [fetchedData, setFetchedData] = useState<APIReturn | null>(null);
   const [requestedPage, setRequestedPage] = useState<number>(1);
   const router = useRouter();
@@ -26,6 +29,16 @@ const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
   useEffect(() => {
     if (filterObj) {
       if (Object.keys(filterObj).length > 0) {
+        if ("page" in filterObj && previousFilters) {
+          const { page: prevPage, ...newFilters } = filterObj;
+          const { page: nextPage, ...prevFilters } = previousFilters;
+
+          if (JSON.stringify(newFilters) !== JSON.stringify(prevFilters)) {
+            // Filters (except the page) have changed, remove the page key from the filter object
+            setFilterObj({ ...newFilters, page: 1 });
+          }
+        }
+
         let newInterpretedObj = mergeObjects(filterObj, keyInterpretations);
         //checks to see if user has supplied a page filter
         if (filterObj.hasOwnProperty("page") && filterObj.page) {
@@ -35,6 +48,8 @@ const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
         const queryString = new URLSearchParams(
           newInterpretedObj as any
         ).toString();
+        //save filter object to state
+        setPreviousFilters(filterObj);
         router.push(`/?${queryString}`);
       } else router.push(`/`);
     }
