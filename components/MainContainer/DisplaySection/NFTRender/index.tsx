@@ -1,12 +1,11 @@
 "use client";
 import React, { useEffect } from "react";
 import { APIReturn, NFT, UserFilters } from "@/app/types";
-import DefaultView from "./DefaultView";
-import LargeView from "./LargeView";
 import ListView from "./ListView";
 import { useFilterButtonContext } from "@/app/Context/store";
 import PageNavigation from "./PageNavigation";
 import DefaultGrid from "./DefaultGrid";
+import LargeGrid from "./LargeGrid";
 
 const NFTRender = ({
   initialData,
@@ -34,7 +33,7 @@ const NFTRender = ({
         />
       )}
       {currentDisplay === "large" && (
-        <LargeView
+        <LargeGrid
           setSelectedNFT={setSelectedNFT}
           initialData={initialData}
           fetchedData={fetchedData}

@@ -48,7 +48,7 @@ const DefaultGrid = ({
               style={{ objectFit: "contain" }}
               className="border"
               alt={item.piece_name ? item.piece_name : "canVERSE NFT"}
-              src={`https://static.canverse.io/pwntemp/pawnhub/pfprenders_jpg/${item.pfp_file_name}`}
+              src={`https://canversedebug.xyz/cdn-cgi/imagedelivery/j7tWLHIDLFBZQvVPxhZJVA/chess_nft/pfp_jpg/${item.pfp_file_name}/galleryThumb`}
             />
           </div>
         );

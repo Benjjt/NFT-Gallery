@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { APIReturn, NFT } from "@/app/types";
 import Image from "next/image";
+import { useFilterButtonContext } from "@/app/Context/store";
 
-const LargeView = ({
+const LargeGrid = ({
   initialData,
   setSelectedNFT,
   fetchedData,
@@ -13,6 +14,7 @@ const LargeView = ({
   fetchedData: APIReturn | null;
 }) => {
   const [NFTS, setNFTS] = useState<NFT[]>([]);
+  const { isFilterOpen } = useFilterButtonContext();
 
   useEffect(() => {
     if (fetchedData?.records) {
@@ -25,20 +27,27 @@ const LargeView = ({
   }, [fetchedData]);
 
   return (
-    <div className=" flex justify-start items-center flex-wrap gap-4 p-4">
+    <div
+      className={` m-6    pb-[4rem] grid ${
+        isFilterOpen ? "grid-cols-3" : "grid-cols-4 "
+      }  gap-12`}
+    >
       {NFTS?.map((item, index) => {
         return (
           <div
-            className="flex relative hover:scale-105 transition-all  justify-center items-center w-[16rem] h-[16rem]  text-light rounded-xl font-bold bg-dark/80 hover:cursor-pointer"
+            className={`relative transition-all       text-light font-bold hover:scale-105  hover:cursor-pointer ${
+              index === NFTS.length - 1 && ""
+            }`}
             key={item.json_id}
             onClick={() => setSelectedNFT(item)}
           >
             <Image
-              fill={true}
               style={{ objectFit: "contain" }}
+              width={500}
+              height={500}
               className="rounded-xl"
               alt="canVERSE NFT"
-              src={`https://static.canverse.io/pwntemp/pawnhub/pfprenders_jpg/${item.pfp_file_name}`}
+              src={`https://canversedebug.xyz/cdn-cgi/imagedelivery/j7tWLHIDLFBZQvVPxhZJVA/chess_nft/pfp_jpg/${item.pfp_file_name}/pfphalf`}
             />
           </div>
         );
@@ -47,4 +56,4 @@ const LargeView = ({
   );
 };
 
-export default LargeView;
+export default LargeGrid;

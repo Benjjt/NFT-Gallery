@@ -5,9 +5,10 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "static.canverse.io",
+        hostname: "canversedebug.xyz",
         port: "",
-        pathname: "/pawnhub/pfprenders_jpg/**",
+        pathname:
+          "/cdn-cgi/imagedelivery/j7tWLHIDLFBZQvVPxhZJVA/chess_nft/pfp_jpg/**",
       },
     ],
   },

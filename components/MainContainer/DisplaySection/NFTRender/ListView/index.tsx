@@ -25,7 +25,7 @@ const ListView = ({
   }, [fetchedData]);
 
   return (
-    <div className="flex flex-col w-full gap-2 p-4">
+    <div className="flex flex-col w-full gap-2 p-4 pb-20">
       {NFTS?.map((item: NFT, index) => {
         return (
           <div
@@ -41,7 +41,7 @@ const ListView = ({
                 alt="canVERSE NFT"
                 // placeholder="blur"
                 // blurDataURL=""
-                src={`https://static.canverse.io/pwntemp/pawnhub/pfprenders_jpg/${item.pfp_file_name}`}
+                src={`https://canversedebug.xyz/cdn-cgi/imagedelivery/j7tWLHIDLFBZQvVPxhZJVA/chess_nft/pfp_jpg/${item.pfp_file_name}/galleryThumb`}
               />
             </div>
             <span> {item.piece_name}</span>
