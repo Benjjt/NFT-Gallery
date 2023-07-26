@@ -35,7 +35,7 @@ const DefaultGrid = ({
       {NFTS?.map((item: NFT, index) => {
         return (
           <div
-            className={`flex relative transition-all  w-full h-[8rem] justify-center items-center   text-light font-bold hover:scale-105  hover:cursor-pointer ${
+            className={` transition-all     text-light font-bold hover:scale-105  hover:cursor-pointer ${
               index === NFTS.length - 1 && ""
             }`}
             key={item.json_id}
@@ -44,9 +44,10 @@ const DefaultGrid = ({
             }}
           >
             <Image
-              fill={true}
               style={{ objectFit: "contain" }}
-              className="border"
+              width={200}
+              height={200}
+              className="rounded-xl"
               alt={item.piece_name ? item.piece_name : "canVERSE NFT"}
               src={`https://canversedebug.xyz/cdn-cgi/imagedelivery/j7tWLHIDLFBZQvVPxhZJVA/chess_nft/pfp_jpg/${item.pfp_file_name}/galleryThumb`}
             />
