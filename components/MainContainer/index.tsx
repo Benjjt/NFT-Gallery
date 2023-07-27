@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import FilterSection from "./FilterSection";
+import OrderedFilterSection from "./OrderedFilterSection";
 import DisplaySection from "./DisplaySection";
 import {
   NFT,
@@ -209,7 +210,7 @@ const MainContainer = ({
 
   return (
     <div className="w-full h-full flex justify-center items-center px-8 ">
-      <FilterSection
+      <OrderedFilterSection
         filterObj={filterObj}
         setFilterObj={setFilterObj}
         initialData={initialData}
