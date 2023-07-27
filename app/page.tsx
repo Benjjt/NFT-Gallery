@@ -4,6 +4,7 @@ import { NFT, APIReturn } from "./types";
 import { NextFetchEvent } from "next/server";
 import { init } from "next/dist/compiled/@vercel/og/satori";
 import { useRouter } from "next/navigation";
+import Main from "@/components/Main";
 
 //SERVER SIDE COMPONENT THAT GET'S ALL NFT's FOR FIRST LOAD
 
@@ -34,9 +35,8 @@ export default async function Home() {
   const initialData: APIReturn = await getNFTs();
 
   return (
-    <main className="flex h-screen  flex-col justify-start items-center m-8 gap-8 max-w-[2000px]  ">
-      <Topbar initialData={initialData} />
-      <MainContainer initialData={initialData} />
-    </main>
+    <div className=" flex-col justify-start items-center w-screen h-screen">
+      <Main initialData={initialData} />;
+    </div>
   );
 }

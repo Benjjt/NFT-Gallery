@@ -12,6 +12,9 @@ module.exports = {
         dark: "#000000",
         accentTwo: "#ff9300",
       },
+      screens: {
+        "disable-scrolling": { raw: "(pointer: coarse)" },
+      },
 
       fontFamily: {
         Montserrat: ["Montserrat", "sans-serif"],

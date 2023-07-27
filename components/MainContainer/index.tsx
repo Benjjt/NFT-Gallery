@@ -15,7 +15,15 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { isValidNumericObject } from "../../utils/typeChecker";
 import { keyInterpretations } from "./DisplaySection/interpretations";
 
-const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
+const MainContainer = ({
+  initialData,
+  setSelectedNFT,
+  selectedNFT,
+}: {
+  initialData: APIReturn;
+  setSelectedNFT: Function;
+  selectedNFT: NFT | null;
+}) => {
   const [filterObj, setFilterObj] = useState<UserFilters | null>(null);
   const [previousFilters, setPreviousFilters] = useState<UserFilters | null>(
     null
@@ -200,7 +208,7 @@ const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
   }
 
   return (
-    <div className="w-full h-full flex justify-center items-center ">
+    <div className="w-full h-full flex justify-center items-center px-8 ">
       <FilterSection
         filterObj={filterObj}
         setFilterObj={setFilterObj}
@@ -209,6 +217,8 @@ const MainContainer = ({ initialData }: { initialData: APIReturn }) => {
       />
       <DisplaySection
         setFilterObj={setFilterObj}
+        setSelectedNFT={setSelectedNFT}
+        selectedNFT={selectedNFT}
         filterObj={filterObj}
         initialData={initialData}
         fetchedData={fetchedData}

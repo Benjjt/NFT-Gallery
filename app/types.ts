@@ -215,12 +215,25 @@ export interface RemainingCounts {
 
 export const FilterKeyOrder = [
   "piece_type",
+  "piece_color",
   "board",
   "environment",
+  "main_material_item",
+  "main_material_rarity",
   "head_item",
+  "head_rarity",
   "body_item",
+  "body_rarity",
+  "base_item",
+  "base_rarity",
   "alt_material_on",
-  "alt_material_on",
+  "alt_material_item",
+  "alt_material_rarity",
+  "accent_material_on",
+  "accent_material_item",
+  "accent_material_rarity",
+  "felt_item",
+  "felt_rarity",
 ];
 
 export type APIReturn = {

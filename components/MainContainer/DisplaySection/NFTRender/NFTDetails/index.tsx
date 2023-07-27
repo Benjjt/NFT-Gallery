@@ -1,82 +1,76 @@
 "use client";
 import { NFT } from "@/app/types";
-import React, { useState } from "react";
-import { BsFillClipboardPlusFill } from "react-icons/bs";
-import { AiFillCloseSquare, AiFillCheckCircle } from "react-icons/ai";
+import React, { useEffect, useState } from "react";
+import { FiChevronDown } from "react-icons/fi";
+import { AiFillCloseCircle } from "react-icons/ai";
+
+import Image from "next/image";
 
 const NFTDetails = ({
   selectedNFT,
   setSelectedNFT,
-  copyClicked,
-  setCopyClicked,
-  intCopied,
-  setIntCopied,
 }: {
   selectedNFT: NFT;
   setSelectedNFT: Function;
-  copyClicked: boolean;
-  setCopyClicked: Function;
-  intCopied: boolean;
-  setIntCopied: Function;
 }) => {
+  const [attributesOpen, setAttributesOpen] = useState<boolean>(false);
+
   return (
-    <div className="absolute right-0 border-l h-screen min-w-0 max-w-[400px] p-4 gap-4 w-full bg-white flex flex-col  justify-start items-start ">
-      <AiFillCloseSquare
-        onClick={() => {
-          setSelectedNFT(null);
-        }}
-        className="absolute right-4 w-8 h-8 hover:cursor-pointer hover:scale-105 transition-all hover:fill-accentTwo"
-      />
-      <div
-        onClick={() => {
-          navigator.clipboard.writeText(JSON.stringify(selectedNFT));
-          setCopyClicked(true);
-        }}
-        className="flex justify-center items-center gap-2 bg-black text-white p-2 hover:scale-105 transition-all rounded-lg group hover:cursor-pointer"
-      >
-        {copyClicked ? (
-          <AiFillCheckCircle className="group-hover:fill-accentTwo" />
-        ) : (
-          <BsFillClipboardPlusFill className="group-hover:fill-accentTwo" />
-        )}
-        <span className="text-sm font-bold ">
-          {copyClicked ? "COPIED" : "COPY TO CLIPBOARD"}
-        </span>
-      </div>
-      <ul className="flex flex-col justify-start items-start gap-2">
-        {Object.keys(selectedNFT).map((key, index) => {
-          return (
-            <li
-              className="flex justify-start items-center gap-2 w-full h-full "
-              key={selectedNFT.json_id}
+    <div
+      style={{ zIndex: 9999 }}
+      className={`absolute w-screen h-screen bg-dark/50 backdrop-blur-md flex justify-center items-center`}
+    >
+      <div className="rounded-xl max-w-[1000px] h-[600px] p-8 gap-4 w-full bg-white flex  justify-center items-center  ">
+        <div className="w-1/2 relative h-full">
+          <Image
+            fill={true}
+            style={{ objectFit: "contain" }}
+            className="rounded-xl"
+            alt="canVERSE NFT"
+            src={`https://canversedebug.xyz/cdn-cgi/imagedelivery/j7tWLHIDLFBZQvVPxhZJVA/chess_nft/pfp_jpg/${selectedNFT.pfp_file_name}/pfphalf`}
+          />
+        </div>
+
+        <div className="flex flex-col justify-start items-start gap-4 w-1/2 h-full ">
+          <div className="flex justify-between items-center w-full">
+            <h2 className="font-bold text-2xl">{selectedNFT.piece_name}</h2>
+            <AiFillCloseCircle
+              onClick={() => setSelectedNFT(false)}
+              className="w-8 h-8 hover:cursor-pointer hover:fill-accentTwo "
+            />
+          </div>
+
+          <div className="w-full relative px-4 py-2 border  rounded-lg shadow-md flex-col justify-start items-start bg-white max-h-full overflow-y-scroll ">
+            <div
+              onClick={() => {
+                setAttributesOpen(!attributesOpen);
+              }}
+              className="flex justify-between items-center hover:cursor-pointer w-full"
             >
-              <span className="font-bold">{key} :</span>
-              <span> {selectedNFT[key as keyof typeof selectedNFT]}</span>
-              {key === "int_list" && !intCopied && (
-                <BsFillClipboardPlusFill
-                  onClick={() => {
-                    navigator.clipboard.writeText(
-                      JSON.stringify(
-                        selectedNFT[key as keyof typeof selectedNFT]
-                      ).substring(
-                        1,
-                        JSON.stringify(
-                          selectedNFT[key as keyof typeof selectedNFT]
-                        ).length - 1
-                      )
-                    );
-                    setIntCopied(true);
-                  }}
-                  className="hover:fill-accentTwo w-6 h-6 hover:cursor-pointer"
-                />
-              )}
-              {intCopied && key === "int_list" && (
-                <AiFillCheckCircle className="fill-accentTwo w-6 h-6" />
-              )}
-            </li>
-          );
-        })}
-      </ul>
+              <span className="font-bold">ATTRIBUTES</span>
+              <FiChevronDown
+                className={`w-8 h-8 transition-all ${
+                  attributesOpen && "rotate-180"
+                }`}
+              />
+            </div>
+            {attributesOpen && (
+              <div className="flex flex-col justify-start items-start w-full gap-2 mt-4">
+                {Object.keys(selectedNFT).map((attribute) => {
+                  return (
+                    <div className="flex justify-between items-start w-full">
+                      <span className="font-bold">
+                        {`${attribute.replaceAll("_", " ")} : `}
+                      </span>
+                      <span>{selectedNFT[attribute]}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

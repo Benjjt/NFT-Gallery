@@ -5,9 +5,7 @@ import { useFilterButtonContext } from "@/app/Context/store";
 import { NFT, APIReturn, RemainingCounts, UserFilters } from "@/app/types";
 import { FiChevronDown } from "react-icons/fi";
 import { BsFillCheckSquareFill } from "react-icons/bs";
-import { IoIosCloseCircle } from "react-icons/io";
 import { AiFillLock } from "react-icons/ai";
-import { CgCloseR } from "react-icons/cg";
 
 const FilterSection = ({
   initialData,
@@ -26,9 +24,9 @@ const FilterSection = ({
   const [IDOfOpen, setIDOfOpen] = useState<string[]>([]);
 
   const filtersAnimation = useTransition(isFilterOpen, {
-    from: { opacity: 0, maxWidth: 0, zIndex: 999999 },
-    enter: { opacity: 1, maxWidth: 400, zIndex: 999999 },
-    leave: { opacity: 0, maxWidth: 0, zIndex: 999999 },
+    from: { opacity: 0, maxWidth: 0, zIndex: 90 },
+    enter: { opacity: 1, maxWidth: 400, zIndex: 90 },
+    leave: { opacity: 0, maxWidth: 0, zIndex: 90 },
     // delay: isFilterOpen ? 0 : 400,
   });
 
