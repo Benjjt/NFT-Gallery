@@ -78,7 +78,7 @@ const NFTDetails = ({
 
                 {Object.keys(selectedNFT).map((attribute) => {
                   return (
-                    <div className="flex justify-between items-start w-full">
+                    <div key={selectedNFT.json_id} className="flex justify-between items-start w-full">
                       <span className="font-bold">
                         {`${attribute.replaceAll("_", " ")} : `}
                       </span>

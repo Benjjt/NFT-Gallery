@@ -6,6 +6,8 @@
     "isolatedModules": true,
     "noEmit": false,
     "noImplicitAny": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "ignoreDeprecations": "5.0",
     // disableing these, fix later
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],

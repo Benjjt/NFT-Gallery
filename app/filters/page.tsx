@@ -14,7 +14,7 @@ export default async function Home() {
   return (
     <main className="flex h-screen  flex-col justify-start items-center m-8 gap-8 max-w-[2000px]  ">
       <Topbar initialData={initialData} />
-      <MainContainer initialData={initialData} />
+      <MainContainer {...{ initialData } as any} />
     </main>
   );
 }
