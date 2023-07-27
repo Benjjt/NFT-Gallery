@@ -2,7 +2,11 @@
 import { NFT } from "@/app/types";
 import React, { useEffect, useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
-import { AiFillCloseCircle } from "react-icons/ai";
+import {
+  AiFillCloseCircle,
+  AiOutlineCopy,
+  AiFillCheckCircle,
+} from "react-icons/ai";
 
 import Image from "next/image";
 
@@ -14,6 +18,8 @@ const NFTDetails = ({
   setSelectedNFT: Function;
 }) => {
   const [attributesOpen, setAttributesOpen] = useState<boolean>(false);
+  const [JSONIdCopied, setJSONIdCopied] = useState<boolean>(false);
+  const [fullJSONCopied, setFullJSONCopied] = useState<boolean>(false);
 
   return (
     <div
@@ -56,13 +62,46 @@ const NFTDetails = ({
             </div>
             {attributesOpen && (
               <div className="flex flex-col justify-start items-start w-full gap-2 mt-4">
+                <div
+                  onClick={() => {
+                    {
+                      navigator.clipboard.writeText(
+                        JSON.stringify(selectedNFT)
+                      );
+                      setFullJSONCopied(true);
+                    }
+                  }}
+                  className="bg-dark text-white px-4 py-2 rounded-lg hover:cursor-pointer hover:scale-105 transition-all"
+                >
+                  {fullJSONCopied ? "COPIED" : "COPY JSON"}
+                </div>
+
                 {Object.keys(selectedNFT).map((attribute) => {
                   return (
                     <div className="flex justify-between items-start w-full">
                       <span className="font-bold">
                         {`${attribute.replaceAll("_", " ")} : `}
                       </span>
-                      <span>{selectedNFT[attribute]}</span>
+                      <span className="flex justify-center items-center gap-2">
+                        {attribute == "json_id" ? (
+                          !JSONIdCopied ? (
+                            <AiOutlineCopy
+                              onClick={() => {
+                                navigator.clipboard.writeText(
+                                  selectedNFT[attribute].toString()
+                                );
+                                setJSONIdCopied(true);
+                              }}
+                              className="hover:cursor-pointer hover:scale-105 transition-all"
+                            />
+                          ) : (
+                            <AiFillCheckCircle />
+                          )
+                        ) : (
+                          ""
+                        )}
+                        <span>{selectedNFT[attribute]}</span>
+                      </span>
                     </div>
                   );
                 })}
