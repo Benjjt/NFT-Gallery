@@ -7,7 +7,7 @@ import { useFilterButtonContext } from "@/app/Context/store";
 const DisplayOptions = () => {
   const { currentDisplay, setCurrentDisplay } = useFilterButtonContext();
   return (
-    <div className="w-full h-full m-2   border rounded-lg flex justify-start items-center max-w-[200px]">
+    <div className="hidden md:flex w-full h-full m-2   border rounded-lg  justify-start items-center max-w-[200px]">
       <div
         onClick={() => {
           setCurrentDisplay("list");
@@ -42,7 +42,6 @@ const DisplayOptions = () => {
             : "hover:cursor-pointer hover:scale-105 hover:shadow-lg"
         }`}
       >
-     
         <MdOutlineGridOn className="h-6 w-6" />
       </div>
     </div>

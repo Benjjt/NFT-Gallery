@@ -12,7 +12,7 @@ const Main = ({ initialData }: { initialData: APIReturn }) => {
 
   return (
     <main
-      className={`flex h-screen   flex-col justify-start items-center  gap-8 max-w-[2000px] relative ${
+      className={`flex h-screen   flex-col justify-start items-center  md:gap-8 max-w-[2000px] relative ${
         selectedNFT && "overflow-hidden  overscroll-none"
       }  `}
     >

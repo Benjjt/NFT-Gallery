@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import FilterSection from "./FilterSection";
 import OrderedFilterSection from "./OrderedFilterSection";
 import DisplaySection from "./DisplaySection";
 import {

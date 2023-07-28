@@ -23,9 +23,6 @@ const DisplaySection = ({
   setSelectedNFT: Function;
   selectedNFT: NFT | null;
 }) => {
-  const [copyClicked, setCopyClicked] = useState<boolean>(false);
-  const [intCopied, setIntCopied] = useState<boolean>(false);
-
   const deleteSelection = (key: string) => {
     //!This currently deletes all selections under a given attribute selection.
     const newObj = { ...filterObj };
@@ -33,14 +30,9 @@ const DisplaySection = ({
     setFilterObj(newObj);
   };
 
-  useEffect(() => {
-    setCopyClicked(false);
-    setIntCopied(false);
-  }, [selectedNFT]);
-
   return (
     <div className="w-full relative h-full overflow-y-scroll flex flex-col justify-start items-start   ">
-      <div className="flex justify-start items-center gap-2 flex-wrap p-4 ">
+      <div className="hidden md:flex justify-start items-center gap-2 flex-wrap p-4 ">
         {filterObj &&
           Object.keys(filterObj).map((key, index) => {
             if (key !== "page")

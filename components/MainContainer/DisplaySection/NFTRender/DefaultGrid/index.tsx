@@ -28,14 +28,16 @@ const DefaultGrid = ({
 
   return (
     <div
-      className={` relative m-6    pb-[4rem] grid ${
-        isFilterOpen ? "grid-cols-6" : "grid-cols-8 "
+      className={` relative m-4 md:m-6    pb-[4rem] grid ${
+        isFilterOpen
+          ? "grid-cols-2 md:grid-cols-6"
+          : "grid-cols-2 md:grid-cols-8 "
       }  gap-8`}
     >
       {NFTS?.map((item: NFT, index) => {
         return (
           <div
-            className={` transition-all     text-light font-bold hover:scale-105  hover:cursor-pointer ${
+            className={` transition-all  bg-dark/50 rounded-xl  text-light font-bold hover:scale-105  hover:cursor-pointer ${
               index === NFTS.length - 1 && ""
             }`}
             key={item.json_id}

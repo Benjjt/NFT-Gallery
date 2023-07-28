@@ -36,7 +36,7 @@ export default async function Home() {
 
   return (
     <div className=" flex-col justify-start items-center w-screen h-screen">
-      <Main initialData={initialData} />;
+      <Main initialData={initialData} />
     </div>
   );
 }

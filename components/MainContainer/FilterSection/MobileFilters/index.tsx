@@ -7,119 +7,41 @@ import { FiChevronDown } from "react-icons/fi";
 import { BsFillCheckSquareFill } from "react-icons/bs";
 import { AiFillLock } from "react-icons/ai";
 
-const FilterSection = ({
-  initialData,
-  fetchedData,
+const MobileFilters = ({
   filterObj,
   setFilterObj,
+  isFilterOpen,
+  updatedFilters,
+  toggleID,
+  IDOfOpen,
+  handleFilterAction,
+  setIsFilterOpen,
 }: {
-  initialData: APIReturn;
-  fetchedData: APIReturn | null;
   filterObj: UserFilters | null;
   setFilterObj: Function;
+  isFilterOpen: boolean;
+  updatedFilters: RemainingCounts;
+  toggleID: Function;
+  IDOfOpen: string[];
+  handleFilterAction: Function;
+  setIsFilterOpen: Function;
 }) => {
-  const { isFilterOpen } = useFilterButtonContext();
-  const [initialFilters, setInitialFilters] = useState<RemainingCounts>({});
-  const [updatedFilters, setUpdatedFilters] = useState<RemainingCounts>({});
-  const [IDOfOpen, setIDOfOpen] = useState<string[]>([]);
-
   const filtersAnimation = useTransition(isFilterOpen, {
-    from: { opacity: 0, maxWidth: 0, zIndex: 90 },
-    enter: { opacity: 1, maxWidth: 400, zIndex: 90 },
-    leave: { opacity: 0, maxWidth: 0, zIndex: 90 },
+    from: { opacity: 0, y: 500, zIndex: 90 },
+    enter: { opacity: 1, y: 0, zIndex: 90 },
+    leave: { opacity: 0, y: 500, zIndex: 90 },
     // delay: isFilterOpen ? 0 : 400,
   });
-
-  //Set both state objects using same data on first load
-  useEffect(() => {
-    const firstCallFilters: RemainingCounts = initialData.remaining_counts;
-    setInitialFilters(firstCallFilters);
-    setUpdatedFilters(firstCallFilters);
-  }, []);
-
-  useEffect(() => {
-    console.log(IDOfOpen);
-  }, [IDOfOpen]);
-
-  useEffect(() => {
-    // Your subsequent API call to get the updated remaining counts.
-    // Let's assume the response is stored in a variable called `updatedApiResponse`.
-    if (fetchedData) {
-      let newUpdatedFilters: RemainingCounts = { ...initialFilters };
-      const APIFilterReturn: RemainingCounts = fetchedData.remaining_counts;
-      for (const key in newUpdatedFilters) {
-        if (key in APIFilterReturn) {
-          // Update the value at index 1 of the number array with the value from APIFilterReturn
-          for (const attribute in (newUpdatedFilters as any)[key]) {
-            if (
-              (APIFilterReturn as any)[key] &&
-              (APIFilterReturn as any)[key][attribute]
-            ) {
-              (newUpdatedFilters as any)[key][attribute][1] = (
-                APIFilterReturn as any
-              )[key][attribute][1];
-            } else {
-              // Handle the case where the nested key or attribute doesn't exist in APIFilterReturn
-              (newUpdatedFilters as any)[key][attribute][1] = 0;
-            }
-          }
-        } else {
-          // If the key is missing in APIFilterReturn, set the value at index 1 to 0
-          for (const attribute in (newUpdatedFilters as any)[key]) {
-            (newUpdatedFilters as any)[key][attribute][1] = 0;
-          }
-        }
-      }
-
-      setUpdatedFilters(newUpdatedFilters);
-    }
-  }, [fetchedData, initialFilters]);
-
-  const toggleID = (clickedString: string) => {
-    setIDOfOpen((prevIDs) => {
-      const index = prevIDs.indexOf(clickedString);
-      if (index !== -1) {
-        // String is already in the array, so remove it
-        return prevIDs.filter((id) => id !== clickedString);
-      } else {
-        // String is not in the array, so add it
-        return [...prevIDs, clickedString];
-      }
-    });
-  };
-
-  const handleFilterAction = (
-    selection: Record<string, number>,
-    parentKey: string
-  ) => {
-    console.log(selection);
-    if (filterObj) {
-      setFilterObj({ ...filterObj, [parentKey]: selection });
-    } else setFilterObj({ [parentKey]: selection });
-
-    // if (
-    //   filterObj &&
-    //   IDOfOpen in filterObj &&
-    //   (filterObj as any)[IDOfOpen] === selection
-    // ) {
-    //   console.log("item to be deleted");
-    //   let newObj = { ...filterObj };
-    //   delete newObj[IDOfOpen as keyof typeof filterObj];
-    //   console.log("Updating state with deletion");
-    //   setFilterObj(newObj);
-    // } else {
-    // }
-  };
 
   return filtersAnimation(
     (style, item) =>
       item && (
         <animated.div
-          className="w-full h-full overflow-scroll relative p-2"
+          className="absolute h-screen w-full overflow-scroll  p-4 bg-white"
           style={style}
         >
-          <div className="flex flex-col justify-start items-start  gap-8">
-            <h2 className="text-xl w-full bg-light font-bold">TRAITS</h2>
+          <div className="flex z-10 flex-col justify-start items-start  gap-8">
+            <h2 className="text-xl w-full bg-light font-bold pl-2">TRAITS</h2>
 
             <ul className="flex flex-col justify-start items-start gap-2  w-full h-full ">
               {Object.keys(updatedFilters).map((parentKey, index) => {
@@ -228,9 +150,31 @@ const FilterSection = ({
               })}
             </ul>
           </div>
+          <div
+            style={{ zIndex: 100 }}
+            className="fixed  bottom-0 left-0 flex gap-4 justify-evenly items-center bg-white w-full p-4 border-t"
+          >
+            <span
+              onClick={() => {
+                setFilterObj({});
+                setIsFilterOpen(false);
+              }}
+              className="w-1/2 flex justify-center items-center border rounded-xl py-2 text-dark font-bold bg-dark/10"
+            >
+              Clear all
+            </span>
+            <span
+              onClick={() => {
+                setIsFilterOpen(false);
+              }}
+              className="w-1/2 flex justify-center items-center border rounded-xl py-2 bg-accentTwo text-white font-bold"
+            >
+              Done
+            </span>
+          </div>
         </animated.div>
       )
   );
 };
 
-export default FilterSection;
+export default MobileFilters;

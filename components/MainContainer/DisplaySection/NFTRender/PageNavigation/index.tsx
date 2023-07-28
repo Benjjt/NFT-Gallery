@@ -38,7 +38,7 @@ const PageNavigation = ({
   };
 
   return (
-    <div className="w-full rounded-t-lg h-[4rem] bg-white border fixed bottom-0 p-4 ">
+    <div className="w-full rounded-t-lg h-[4rem] bg-white md:border fixed bottom-0 p-4 ">
       <div className="flex justify-start items-center gap-4 w-full h-full">
         <span className="font-bold">{`Page ${currentPage} of ${totalPages}`}</span>
         {totalPages > 0 && currentPage < totalPages && currentPage !== 1 && (
