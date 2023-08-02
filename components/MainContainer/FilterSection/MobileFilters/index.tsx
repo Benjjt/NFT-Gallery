@@ -5,7 +5,7 @@ import { useFilterButtonContext } from "@/app/Context/store";
 import { NFT, APIReturn, RemainingCounts, UserFilters } from "@/app/types";
 import { FiChevronDown } from "react-icons/fi";
 import { BsFillCheckSquareFill } from "react-icons/bs";
-import { AiFillLock } from "react-icons/ai";
+import { AiFillLock, AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const MobileFilters = ({
   filterObj,
@@ -16,6 +16,7 @@ const MobileFilters = ({
   IDOfOpen,
   handleFilterAction,
   setIsFilterOpen,
+  NFTsLoading,
 }: {
   filterObj: UserFilters | null;
   setFilterObj: Function;
@@ -25,6 +26,7 @@ const MobileFilters = ({
   IDOfOpen: string[];
   handleFilterAction: Function;
   setIsFilterOpen: Function;
+  NFTsLoading: boolean;
 }) => {
   const filtersAnimation = useTransition(isFilterOpen, {
     from: { opacity: 0, y: 500, zIndex: 90 },
@@ -104,9 +106,11 @@ const MobileFilters = ({
                                       childKey
                                     ][1]}
                                 </span>
-                                {(updatedFilters as any)[parentKey][
-                                  childKey
-                                ][1] != 0 ? (
+                                {NFTsLoading ? (
+                                  <AiOutlineLoading3Quarters className="w-8 h-8 animate-spin" />
+                                ) : (updatedFilters as any)[parentKey][
+                                    childKey
+                                  ][1] != 0 ? (
                                   filterObj &&
                                   Object.keys(filterObj).includes(parentKey) &&
                                   Object.keys(
@@ -136,7 +140,7 @@ const MobileFilters = ({
                             
                             `}
                                   >
-                                    <AiFillLock className="fill-dark/80 w-8 h-8" />
+                                    0
                                   </div>
                                 )}
                               </li>

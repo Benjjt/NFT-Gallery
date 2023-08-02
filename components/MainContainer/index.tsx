@@ -29,7 +29,7 @@ const MainContainer = ({
     null
   );
   const [fetchedData, setFetchedData] = useState<APIReturn | null>(null);
-  const [requestedPage, setRequestedPage] = useState<number>(1);
+  const [NFTsLoading, setNFTsLoading] = useState<boolean>(false);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -133,6 +133,7 @@ const MainContainer = ({
   }
 
   async function getFilteredNFTs(filters: string) {
+    setNFTsLoading(true);
     const res = await fetch(
       `https://devpawnhub.canversedebug.xyz/pieces?${filters}`,
       {
@@ -147,9 +148,13 @@ const MainContainer = ({
     );
 
     if (!res.ok) {
+      setNFTsLoading(false);
+
       // This will activate the closest `error.js` Error Boundary
       throw new Error("Failed to fetch data");
     } else {
+      setNFTsLoading(false);
+
       let data = await res.json();
       setFetchedData(data);
     }
@@ -214,6 +219,7 @@ const MainContainer = ({
         setFilterObj={setFilterObj}
         initialData={initialData}
         fetchedData={fetchedData}
+        NFTsLoading={NFTsLoading}
       />
       <DisplaySection
         setFilterObj={setFilterObj}
@@ -222,7 +228,6 @@ const MainContainer = ({
         filterObj={filterObj}
         initialData={initialData}
         fetchedData={fetchedData}
-        setRequestedPage={setRequestedPage}
       />
     </div>
   );

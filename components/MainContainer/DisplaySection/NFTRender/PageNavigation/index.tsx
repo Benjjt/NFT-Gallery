@@ -10,13 +10,11 @@ const PageNavigation = ({
   fetchedData,
   setFilterObj,
   filterObj,
-  setRequestedPage,
 }: {
   initialData: APIReturn | null;
   fetchedData: APIReturn | null;
   setFilterObj: Function;
   filterObj: UserFilters | null;
-  setRequestedPage: Function;
 }) => {
   const [totalPages, setTotalPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(0);

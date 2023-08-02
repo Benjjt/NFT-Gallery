@@ -16,11 +16,13 @@ const OrderedFilterSection = ({
   fetchedData,
   filterObj,
   setFilterObj,
+  NFTsLoading,
 }: {
   initialData: APIReturn;
   fetchedData: APIReturn | null;
   filterObj: UserFilters | null;
   setFilterObj: Function;
+  NFTsLoading: boolean;
 }) => {
   const { isFilterOpen, setIsFilterOpen } = useFilterButtonContext();
   const [initialFilters, setInitialFilters] = useState<RemainingCounts>({});
@@ -33,10 +35,6 @@ const OrderedFilterSection = ({
     setInitialFilters(firstCallFilters);
     setUpdatedFilters(firstCallFilters);
   }, []);
-
-  useEffect(() => {
-    console.log("is mobile?", isMobile);
-  }, [isMobile]);
 
   useEffect(() => {
     // Your subsequent API call to get the updated remaining counts.
@@ -105,6 +103,7 @@ const OrderedFilterSection = ({
       IDOfOpen={IDOfOpen}
       handleFilterAction={handleFilterAction}
       setIsFilterOpen={setIsFilterOpen}
+      NFTsLoading={NFTsLoading}
     />
   ) : (
     <DesktopFilters
@@ -114,6 +113,7 @@ const OrderedFilterSection = ({
       toggleID={toggleID}
       IDOfOpen={IDOfOpen}
       handleFilterAction={handleFilterAction}
+      NFTsLoading={NFTsLoading}
     />
   );
 };

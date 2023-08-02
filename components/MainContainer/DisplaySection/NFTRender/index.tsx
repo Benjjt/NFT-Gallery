@@ -13,14 +13,12 @@ const NFTRender = ({
   setSelectedNFT,
   setFilterObj,
   filterObj,
-  setRequestedPage,
 }: {
   initialData: APIReturn | null;
   fetchedData: APIReturn | null;
   setSelectedNFT: Function;
   setFilterObj: Function;
   filterObj: UserFilters | null;
-  setRequestedPage: Function;
 }) => {
   const { currentDisplay, setCurrentDisplay } = useFilterButtonContext();
   return (
@@ -51,7 +49,6 @@ const NFTRender = ({
         fetchedData={fetchedData}
         setFilterObj={setFilterObj}
         filterObj={filterObj}
-        setRequestedPage={setRequestedPage}
       />
     </div>
   );

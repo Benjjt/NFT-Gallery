@@ -5,7 +5,7 @@ import { useFilterButtonContext } from "@/app/Context/store";
 import { NFT, APIReturn, RemainingCounts, UserFilters } from "@/app/types";
 import { FiChevronDown } from "react-icons/fi";
 import { BsFillCheckSquareFill } from "react-icons/bs";
-import { AiFillLock } from "react-icons/ai";
+import { AiFillLock, AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const DesktopFilters = ({
   filterObj,
@@ -14,6 +14,7 @@ const DesktopFilters = ({
   toggleID,
   IDOfOpen,
   handleFilterAction,
+  NFTsLoading,
 }: {
   filterObj: UserFilters | null;
   isFilterOpen: boolean;
@@ -21,6 +22,7 @@ const DesktopFilters = ({
   toggleID: Function;
   IDOfOpen: string[];
   handleFilterAction: Function;
+  NFTsLoading: boolean;
 }) => {
   const filtersAnimation = useTransition(isFilterOpen, {
     from: { opacity: 0, maxWidth: 0, zIndex: 90 },
@@ -100,9 +102,12 @@ const DesktopFilters = ({
                                       childKey
                                     ][1]}
                                 </span>
-                                {(updatedFilters as any)[parentKey][
-                                  childKey
-                                ][1] != 0 ? (
+
+                                {NFTsLoading ? (
+                                  <AiOutlineLoading3Quarters className="w-6 h-6 animate-spin fill-dark/50" />
+                                ) : (updatedFilters as any)[parentKey][
+                                    childKey
+                                  ][1] != 0 ? (
                                   filterObj &&
                                   Object.keys(filterObj).includes(parentKey) &&
                                   Object.keys(
@@ -132,7 +137,7 @@ const DesktopFilters = ({
                             
                             `}
                                   >
-                                    <AiFillLock className="fill-dark/80 w-8 h-8" />
+                                    0
                                   </div>
                                 )}
                               </li>
