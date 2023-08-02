@@ -50,6 +50,7 @@ const DefaultGrid = ({
               width={200}
               height={200}
               placeholder="blur"
+              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mMUqAcAAKUAkcwegSwAAAAASUVORK5CYII="
               className="rounded-xl"
               alt={item.piece_name ? item.piece_name : "canVERSE NFT"}
               src={`https://canversedebug.xyz/cdn-cgi/imagedelivery/j7tWLHIDLFBZQvVPxhZJVA/chess_nft/pfp_jpg/${item.pfp_file_name}/galleryThumb`}

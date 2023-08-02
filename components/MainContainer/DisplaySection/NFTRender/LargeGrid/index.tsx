@@ -45,6 +45,8 @@ const LargeGrid = ({
               style={{ objectFit: "contain" }}
               width={500}
               height={500}
+              placeholder="blur"
+              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mMUqAcAAKUAkcwegSwAAAAASUVORK5CYII="
               className="rounded-xl"
               alt="canVERSE NFT"
               src={`https://canversedebug.xyz/cdn-cgi/imagedelivery/j7tWLHIDLFBZQvVPxhZJVA/chess_nft/pfp_jpg/${item.pfp_file_name}/pfphalf`}

@@ -39,8 +39,8 @@ const ListView = ({
                 style={{ objectFit: "contain" }}
                 className="rounded-md"
                 alt="canVERSE NFT"
-                // placeholder="blur"
-                // blurDataURL=""
+                placeholder="blur"
+                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mMUqAcAAKUAkcwegSwAAAAASUVORK5CYII="
                 src={`https://canversedebug.xyz/cdn-cgi/imagedelivery/j7tWLHIDLFBZQvVPxhZJVA/chess_nft/pfp_jpg/${item.pfp_file_name}/galleryThumb`}
               />
             </div>
