@@ -11,7 +11,6 @@ const DisplaySection = ({
   fetchedData,
   filterObj,
   setFilterObj,
-  setRequestedPage,
   setSelectedNFT,
   selectedNFT,
 }: {
@@ -19,7 +18,6 @@ const DisplaySection = ({
   fetchedData: APIReturn | null;
   filterObj: UserFilters | null;
   setFilterObj: Function;
-  setRequestedPage: Function;
   setSelectedNFT: Function;
   selectedNFT: NFT | null;
 }) => {
@@ -63,7 +61,6 @@ const DisplaySection = ({
         setSelectedNFT={setSelectedNFT}
         setFilterObj={setFilterObj}
         filterObj={filterObj}
-        setRequestedPage={setRequestedPage}
       />
     </div>
   );
