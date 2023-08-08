@@ -10,7 +10,7 @@ const Topbar = ({ initialData }: { initialData: APIReturn | null }) => {
     <div className="flex justify-between items-center gap-8 w-full h-[3rem] m-8 px-8  ">
       <Image width={150} height={125} src={canverse} alt="canverse logo" />
       <FilterButton />
-      <Searchbar />
+      {/* <Searchbar /> */}
       <DisplayOptions />
     </div>
   );

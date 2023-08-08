@@ -33,6 +33,8 @@ const NFTDetails = ({
               fill={true}
               style={{ objectFit: "contain" }}
               className="rounded-xl"
+              placeholder="blur"
+              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mMUqAcAAKUAkcwegSwAAAAASUVORK5CYII="
               alt="canVERSE NFT"
               src={`https://canversedebug.xyz/cdn-cgi/imagedelivery/j7tWLHIDLFBZQvVPxhZJVA/chess_nft/pfp_jpg/${selectedNFT.pfp_file_name}/pfphalf`}
             />
@@ -128,6 +130,8 @@ const NFTDetails = ({
             height={325}
             style={{ objectFit: "contain" }}
             className="rounded-xl"
+            placeholder="blur"
+            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mMUqAcAAKUAkcwegSwAAAAASUVORK5CYII="
             alt="canVERSE NFT"
             src={`https://canversedebug.xyz/cdn-cgi/imagedelivery/j7tWLHIDLFBZQvVPxhZJVA/chess_nft/pfp_jpg/${selectedNFT.pfp_file_name}/pfphalf`}
           />
