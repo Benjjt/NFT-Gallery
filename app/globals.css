@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 :root {
+
+  --desktop-padding : 32px ;
   
 }
 
