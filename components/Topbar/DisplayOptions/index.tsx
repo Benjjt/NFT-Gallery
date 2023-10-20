@@ -14,7 +14,7 @@ const DisplayOptions = () => {
         }}
         className={`h-full w-1/3 flex justify-center border-r rounded-l-lg items-center  transition-all ${
           currentDisplay === "list"
-            ? "bg-dark/5"
+            ? "bg-white/30"
             : "hover:cursor-pointer hover:scale-105 hover:shadow-lg"
         }`}
       >
@@ -26,7 +26,7 @@ const DisplayOptions = () => {
         }}
         className={`h-full w-1/3 flex justify-center items-center  transition-all ${
           currentDisplay === "large"
-            ? "bg-dark/5"
+            ? "bg-white/30"
             : "hover:cursor-pointer hover:scale-105 hover:shadow-lg"
         }`}
       >
@@ -38,7 +38,7 @@ const DisplayOptions = () => {
         }}
         className={`h-full w-1/3 flex justify-center items-center border-l rounded-r-lg  transition-all ${
           currentDisplay === "default"
-            ? "bg-dark/5"
+            ? "bg-white/30"
             : "hover:cursor-pointer hover:scale-105 hover:shadow-lg"
         }`}
       >
